@@ -1,11 +1,34 @@
 // Appearance
-ECS.components.Appearance = function (position) {
-  this.mesh = BABYLON.MeshBuilder.CreateBox("", { size: 2, height: 8 }, scene);
-  this.mesh.material = new BABYLON.StandardMaterial("selectcolor", scene);
-  this.mesh.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
-  this.mesh.material.specularColor = BABYLON.Color3.Black();
-  this.mesh.unit = this;
-  this.mesh.position = position;
+ECS.components.Appearance = function (position, type, hasLabel) {
+  if (type === "hero") {
+    this.mesh = BABYLON.MeshBuilder.CreateBox(
+      "",
+      { size: 2, height: 8 },
+      scene
+    );
+    this.mesh.material = new BABYLON.StandardMaterial("selectcolor", scene);
+    this.mesh.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
+    this.mesh.material.specularColor = BABYLON.Color3.Black();
+    this.mesh.unit = this;
+    this.mesh.position = position;
+  } else if (type === "bullet") {
+    this.mesh = BABYLON.MeshBuilder.CreateSphere("", { diameter: 1 }, scene);
+    this.mesh.material = new BABYLON.StandardMaterial("selectcolor", scene);
+    this.mesh.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
+    this.mesh.material.specularColor = BABYLON.Color3.Black();
+    this.mesh.unit = this;
+    this.mesh.position = position;
+  }
+
+  if (hasLabel) {
+    this.label = new BABYLON.GUI.TextBlock();
+    this.label.text = "100";
+    this.label.fontSize = 30;
+    this.label.color = "white";
+    gui.addControl(this.label);
+    this.label.linkWithMesh(this.mesh);
+    this.label.linkOffsetY = -100;
+  }
 
   return this;
 };
