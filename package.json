@@ -1,0 +1,23 @@
+{
+  "name": "9-circles",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnlop/9-circles.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johnlop/9-circles/issues"
+  },
+  "homepage": "https://github.com/johnlop/9-circles#readme",
+  "dependencies": {
+    "babylonjs": "^4.1.0",
+    "babylonjs-gui": "^4.1.0"
+  }
+}
