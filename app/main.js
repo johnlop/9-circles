@@ -1,11 +1,11 @@
-// Get the canvas element from our HTML below
-let canvas = document.querySelector("#renderCanvas");
+// Get the canvas element from the HTML
+const canvas = document.querySelector("#renderCanvas");
 
 // Load the BABYLON 3D engine
-let engine = new BABYLON.Engine(canvas, true);
+const engine = new BABYLON.Engine(canvas, true);
+const CPS = 60;
 
 let camera, light, pointer, ground, gui, hero, pauseScreen, shadowGenerator;
-let mousePressed = false;
 let pause = false;
 
 function createScene() {
@@ -55,6 +55,7 @@ function initGame() {
     )
   );
   hero.addComponent(new ECS.components.Vitals(100));
+  hero.skillLastUsed = Date.now();
   camera.lockedTarget = hero.components.appearance.mesh;
 
   for (let i = 0; i < 10; i++) {
@@ -62,7 +63,7 @@ function initGame() {
     ennemy.addComponent(new ECS.components.Coordinates());
     ennemy.components.coordinates.position.x = Math.random() * 100 - 50;
     ennemy.components.coordinates.position.z = Math.random() * 100 - 50;
-    ennemy.components.coordinates.speed = 0.1;
+    ennemy.components.coordinates.speed = 5;
     ennemy.addComponent(
       new ECS.components.Appearance(
         ennemy.components.coordinates.position,
@@ -114,7 +115,7 @@ engine.runRenderLoop(function () {
 });
 
 let systems = [ECS.systems.move];
-setInterval(systemLoop, 40);
+setInterval(systemLoop, 1000 / CPS);
 
 function systemLoop() {
   if (!pause) {

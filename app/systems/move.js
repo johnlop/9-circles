@@ -24,7 +24,7 @@ ECS.systems.move = function (entities) {
       if (entity.components.coordinates.direction) {
         dir = entity.components.coordinates.direction
           .normalize()
-          .scaleInPlace(entity.components.coordinates.speed);
+          .scaleInPlace(entity.components.coordinates.speed / CPS);
         entity.components.appearance.mesh.moveWithCollisions(dir);
       }
 
