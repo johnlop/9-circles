@@ -1,18 +1,18 @@
 // Get the canvas element from our HTML below
-var canvas = document.querySelector("#renderCanvas");
+let canvas = document.querySelector("#renderCanvas");
 
 // Load the BABYLON 3D engine
-var engine = new BABYLON.Engine(canvas, true);
+let engine = new BABYLON.Engine(canvas, true);
 
-var camera, light, pointer, ground, gui, hero, pauseScreen, shadowGenerator;
-var mousePressed = false;
-var pause = false;
+let camera, light, pointer, ground, gui, hero, pauseScreen, shadowGenerator;
+let mousePressed = false;
+let pause = false;
 
 function createScene() {
   scene = new BABYLON.Scene(engine);
   scene.clearColor = new BABYLON.Color3(1, 1, 1);
   scene.checkCollisions = true;
-  scene.collisionsEnabled = true;
+  // scene.collisionsEnabled = true;
 
   light = new BABYLON.PointLight("light", new BABYLON.Vector3(0, 12, 0), scene);
   light.intensity = 1;
@@ -31,7 +31,7 @@ function createScene() {
 
   gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
-  ground = BABYLON.Mesh.CreateGround("ground", 1500, 1500, 2, scene);
+  ground = BABYLON.Mesh.CreateGround("ground", 1500, 1500, 0, scene);
   ground.material = new BABYLON.StandardMaterial("groundmat", scene);
   ground.material.diffuseTexture = new BABYLON.Texture(
     "content/img/ground.jpg",
@@ -41,6 +41,7 @@ function createScene() {
   ground.material.diffuseTexture.vScale = 24;
   ground.material.specularColor = BABYLON.Color3.Black();
   ground.receiveShadows = true;
+  // ground.checkCollisions = true;
 }
 
 function initGame() {
@@ -56,8 +57,8 @@ function initGame() {
   hero.addComponent(new ECS.components.Vitals(100));
   camera.lockedTarget = hero.components.appearance.mesh;
 
-  for (var i = 0; i < 10; i++) {
-    var ennemy = new ECS.Entity();
+  for (let i = 0; i < 10; i++) {
+    let ennemy = new ECS.Entity();
     ennemy.addComponent(new ECS.components.Coordinates());
     ennemy.components.coordinates.position.x = Math.random() * 100 - 50;
     ennemy.components.coordinates.position.z = Math.random() * 100 - 50;
@@ -103,37 +104,37 @@ function initGame() {
 createScene();
 initGame();
 
-var systems = [ECS.systems.move, ECS.systems.attack];
-
 // Register a render loop to repeatedly render the scene
 engine.runRenderLoop(function () {
-  if (true || mousePressed) {
-    var pickResult = scene.pick(scene.pointerX, scene.pointerY);
-    if (pickResult.hit) {
-      pointer = pickResult.pickedPoint;
-    }
+  let pickResult = scene.pick(scene.pointerX, scene.pointerY);
+  if (pickResult.hit) {
+    pointer = pickResult.pickedPoint;
   }
+  scene.render();
+});
 
-  if (pointer) {
-    hero.components.coordinates.look = pointer;
-    light.position.x = hero.components.coordinates.position.x;
-    light.position.z = hero.components.coordinates.position.z;
-  }
+let systems = [ECS.systems.move];
+setInterval(systemLoop, 40);
 
+function systemLoop() {
   if (!pause) {
-    for (var i = 0; i < systems.length; i++) {
+    if (pointer) {
+      hero.components.coordinates.look = pointer;
+      light.position.x = hero.components.coordinates.position.x;
+      light.position.z = hero.components.coordinates.position.z;
+    }
+
+    for (let i in systems) {
       systems[i](ECS.entities);
     }
+
+    keyHandler();
+
+    text1.text =
+      hero.components.vitals.life + " / " + hero.components.vitals.maxLife;
+    text2.text = engine.getFps().toFixed() + "fps / " + scene.meshes.length;
   }
-
-  keyHandler();
-
-  scene.render();
-
-  text1.text =
-    hero.components.vitals.life + " / " + hero.components.vitals.maxLife;
-  text2.text = engine.getFps().toFixed() + "fps / " + scene.meshes.length;
-});
+}
 
 // Watch for browser/canvas resize eventsw
 window.addEventListener("resize", function () {

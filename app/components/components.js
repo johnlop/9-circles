@@ -1,6 +1,6 @@
 // Appearance
 ECS.components.Appearance = function (position, type, hasLabel) {
-  var hasShadow = true;
+  let hasShadow = true;
   if (type === "hero") {
     this.mesh = BABYLON.MeshBuilder.CreateBox(
       "",
@@ -12,6 +12,7 @@ ECS.components.Appearance = function (position, type, hasLabel) {
     this.mesh.material.specularColor = BABYLON.Color3.Black();
     this.mesh.unit = this;
     this.mesh.position = position;
+    // this.mesh.checkCollisions = true;
     hasShadow = false;
   } else if (type === "ennemy") {
     this.mesh = BABYLON.MeshBuilder.CreateBox(
@@ -24,6 +25,7 @@ ECS.components.Appearance = function (position, type, hasLabel) {
     this.mesh.material.specularColor = BABYLON.Color3.Black();
     this.mesh.unit = this;
     this.mesh.position = position;
+    // this.mesh.checkCollisions = true;
   } else if (type === "bullet") {
     this.mesh = BABYLON.MeshBuilder.CreateSphere("", { diameter: 1 }, scene);
     this.mesh.material = new BABYLON.StandardMaterial("selectcolor", scene);

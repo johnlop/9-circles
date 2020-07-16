@@ -1,9 +1,9 @@
 // ECS - System - Move
 // --------------------------------------
-ECS.systems.move = function renderSystem(entities) {
-  var entity, dir;
+ECS.systems.move = function (entities) {
+  let entity, dir;
 
-  for (var id in entities) {
+  for (let id in entities) {
     entity = entities[id];
 
     if (entity.components.coordinates) {
@@ -28,6 +28,7 @@ ECS.systems.move = function renderSystem(entities) {
         entity.components.appearance.mesh.moveWithCollisions(dir);
       }
 
+      // Remove entities that have gone too far
       if (
         BABYLON.Vector3.Distance(
           entity.components.coordinates.position,

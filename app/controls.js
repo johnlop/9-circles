@@ -1,71 +1,70 @@
 function keyHandler(event) {
-  if (map[39] || map[68]) {
-    //right
+  if (map["ArrowDown"] || map["KeyS"]) {
     hero.components.appearance.mesh.translate(
-      BABYLON.Axis.X,
-      1,
+      BABYLON.Axis.Z,
+      -0.5,
       BABYLON.Space.LOCAL
     );
     hero.components.coordinates.position =
       hero.components.appearance.mesh.position;
-  } else if (map[37] || map[65]) {
-    //left
+  } else if (map["ArrowUp"] || map["KeyW"]) {
     hero.components.appearance.mesh.translate(
-      BABYLON.Axis.X,
-      -1,
+      BABYLON.Axis.Z,
+      map["ShiftLeft"] ? 1 : 0.5,
       BABYLON.Space.LOCAL
     );
     hero.components.coordinates.position =
       hero.components.appearance.mesh.position;
   }
-  if (map[40] || map[83]) {
-    //down
+  if (map["ArrowRight"] || map["KeyD"]) {
     hero.components.appearance.mesh.translate(
-      BABYLON.Axis.Z,
-      -1,
+      BABYLON.Axis.X,
+      0.5,
       BABYLON.Space.LOCAL
     );
     hero.components.coordinates.position =
       hero.components.appearance.mesh.position;
-  } else if (map[38] || map[87]) {
-    //up
+  } else if (map["ArrowLeft"] || map["KeyA"]) {
     hero.components.appearance.mesh.translate(
-      BABYLON.Axis.Z,
-      1,
+      BABYLON.Axis.X,
+      -0.5,
       BABYLON.Space.LOCAL
     );
     hero.components.coordinates.position =
       hero.components.appearance.mesh.position;
   }
-  if (map[32]) {
-    //space
-    var entity = new ECS.Entity();
-    entity.addComponent(new ECS.components.Coordinates());
-    entity.components.coordinates.position = hero.components.coordinates.position.clone();
-    entity.addComponent(
+  if (map["Space"]) {
+    let bullet = new ECS.Entity();
+    bullet.addComponent(new ECS.components.Coordinates());
+    bullet.components.coordinates.position = hero.components.coordinates.position.clone();
+    bullet.addComponent(
       new ECS.components.Appearance(
-        entity.components.coordinates.position,
+        bullet.components.coordinates.position,
         "bullet",
         false
       )
     );
 
-    entity.components.coordinates.speed = 5;
-    entity.components.coordinates.direction = pointer.subtract(
-      entity.components.coordinates.position
+    bullet.components.coordinates.speed = 5;
+    bullet.components.coordinates.direction = pointer.subtract(
+      bullet.components.coordinates.position
     );
-  }
-  if (map[80]) {
-    pause = !pause;
-    pauseScreen.isVisible = pause;
   }
 }
 
-var map = {};
-onkeydown = onkeyup = function (e) {
-  // e = e || event;
-  map[e.keyCode] = e.type === "keydown";
+let map = {};
+onkeydown = function (e) {
+  map[e.code] = true;
+};
+onkeyup = function (e) {
+  map[e.code] = false;
+  // Pause
+  if (e.code === "KeyP") {
+    pause = !pause;
+    pauseScreen.isVisible = pause;
+  }
 };
 
+document.unbind("keypress");
 document.addEventListener("keydown", onkeydown, false);
 document.addEventListener("keyup", onkeyup, false);
