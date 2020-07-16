@@ -55,7 +55,9 @@ function initGame() {
     )
   );
   hero.addComponent(new ECS.components.Vitals(100));
-  hero.skillLastUsed = Date.now();
+  hero.skills = [];
+  hero.skills.push(new Skill("Space", true, 500, 1, 10, 50, 100));
+  hero.skills.push(new Skill("KeyE", true, 2000, 1, 10, 20, 50));
   camera.lockedTarget = hero.components.appearance.mesh;
 
   for (let i = 0; i < 10; i++) {
