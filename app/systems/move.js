@@ -7,12 +7,17 @@ ECS.systems.move = function renderSystem(entities) {
     entity = entities[id];
 
     if (entity.components.coordinates) {
-      if (entity.components.coordinates.target) {
-        entity.components.coordinates.direction = entity.components.coordinates.target.subtract(
+      if (entity.components.target) {
+        entity.components.coordinates.direction = entity.components.target.entity.components.coordinates.position.subtract(
           entity.components.coordinates.position
         );
+        entity.components.coordinates.look =
+          entity.components.target.entity.components.coordinates.position;
+      }
+
+      if (entity.components.coordinates.look) {
         entity.components.appearance.mesh.lookAt(
-          entity.components.coordinates.target
+          entity.components.coordinates.look
         );
       }
 

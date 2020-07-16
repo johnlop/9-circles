@@ -39,24 +39,40 @@ function createScene() {
 }
 
 function initGame() {
-  var entity = new ECS.Entity();
-  entity.addComponent(new ECS.components.Coordinates());
-  entity.addComponent(
+  hero = new ECS.Entity();
+  hero.addComponent(new ECS.components.Coordinates());
+  hero.addComponent(
     new ECS.components.Appearance(
-      entity.components.coordinates.position,
+      hero.components.coordinates.position,
       "hero",
       true
     )
   );
-  ECS.entities[entity.id] = entity;
-  hero = entity;
+  ECS.entities[hero.id] = hero;
   camera.lockedTarget = hero.components.appearance.mesh;
+
+  for (var i = 0; i < 10; i++) {
+    var ennemy = new ECS.Entity();
+    ennemy.addComponent(new ECS.components.Coordinates());
+    ennemy.components.coordinates.position.x = Math.random() * 100 - 50;
+    ennemy.components.coordinates.position.z = Math.random() * 100 - 50;
+    ennemy.components.coordinates.speed = 0.1;
+    ennemy.addComponent(
+      new ECS.components.Appearance(
+        ennemy.components.coordinates.position,
+        "ennemy",
+        true
+      )
+    );
+    ennemy.addComponent(new ECS.components.Target(hero));
+    ECS.entities[ennemy.id] = ennemy;
+  }
 }
 
 createScene();
 initGame();
 
-var systems = [ECS.systems.move];
+var systems = [ECS.systems.move, ECS.systems.attack];
 
 // Register a render loop to repeatedly render the scene
 engine.runRenderLoop(function () {
@@ -68,7 +84,7 @@ engine.runRenderLoop(function () {
   }
 
   if (pointer) {
-    hero.components.coordinates.target = pointer;
+    hero.components.coordinates.look = pointer;
     light.position.x = hero.components.coordinates.position.x;
     light.position.z = hero.components.coordinates.position.z;
   }

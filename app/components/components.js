@@ -11,6 +11,17 @@ ECS.components.Appearance = function (position, type, hasLabel) {
     this.mesh.material.specularColor = BABYLON.Color3.Black();
     this.mesh.unit = this;
     this.mesh.position = position;
+  } else if (type === "ennemy") {
+    this.mesh = BABYLON.MeshBuilder.CreateBox(
+      "",
+      { size: 1, height: 6 },
+      scene
+    );
+    this.mesh.material = new BABYLON.StandardMaterial("selectcolor", scene);
+    this.mesh.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
+    this.mesh.material.specularColor = BABYLON.Color3.Black();
+    this.mesh.unit = this;
+    this.mesh.position = position;
   } else if (type === "bullet") {
     this.mesh = BABYLON.MeshBuilder.CreateSphere("", { diameter: 1 }, scene);
     this.mesh.material = new BABYLON.StandardMaterial("selectcolor", scene);
@@ -43,3 +54,11 @@ ECS.components.Coordinates = function () {
   return this;
 };
 ECS.components.Coordinates.prototype.name = "coordinates";
+
+// Target
+ECS.components.Target = function (target) {
+  this.entity = target;
+
+  return this;
+};
+ECS.components.Target.prototype.name = "target";
