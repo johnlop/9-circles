@@ -21,14 +21,20 @@ ECS.systems.move = function renderSystem(entities) {
         );
       }
 
-      if (
-        entity.components.coordinates.direction &&
-        entity.components.coordinates.direction.length() > 2
-      ) {
+      if (entity.components.coordinates.direction) {
         dir = entity.components.coordinates.direction
           .normalize()
           .scaleInPlace(entity.components.coordinates.speed);
         entity.components.appearance.mesh.moveWithCollisions(dir);
+      }
+
+      if (
+        BABYLON.Vector3.Distance(
+          entity.components.coordinates.position,
+          hero.components.coordinates.position
+        ) > 100
+      ) {
+        entity.remove();
       }
     }
   }

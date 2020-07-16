@@ -1,13 +1,23 @@
 ECS.Entity = function Entity() {
   ECS.Entity.prototype._count++;
-  this.id = ECS.Entity.prototype._count;
+  ECS.Entity.prototype._index++;
+  this.id = ECS.Entity.prototype._index;
   this.components = {};
-
+  ECS.entities[this.id] = this;
   return this;
 };
 
 // keep track of entities created
 ECS.Entity.prototype._count = 0;
+ECS.Entity.prototype._index = 0;
+
+ECS.Entity.prototype.remove = function remove() {
+  for (componentName in this.components) {
+    this.removeComponent(componentName);
+  }
+  delete ECS.entities[this.id];
+  ECS.Entity.prototype._count--;
+};
 
 ECS.Entity.prototype.addComponent = function addComponent(component) {
   // Add component data to the entity
@@ -25,6 +35,8 @@ ECS.Entity.prototype.removeComponent = function removeComponent(componentName) {
     // get the name from the prototype of the passed component function
     name = componentName.prototype.name;
   }
+
+  if (this.components[name].remove) this.components[name].remove();
 
   delete this.components[name];
   return this;

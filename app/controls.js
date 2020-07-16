@@ -54,15 +54,17 @@ function keyHandler(event) {
     entity.components.coordinates.direction = pointer.subtract(
       entity.components.coordinates.position
     );
-    //entity.components.coordinates.target = pointer;
-    ECS.entities[entity.id] = entity;
+  }
+  if (map[80]) {
+    pause = !pause;
+    pauseScreen.isVisible = pause;
   }
 }
 
 var map = {};
 onkeydown = onkeyup = function (e) {
-  e = e || event;
-  map[e.keyCode] = e.type == "keydown";
+  // e = e || event;
+  map[e.keyCode] = e.type === "keydown";
 };
 
 document.addEventListener("keydown", onkeydown, false);

@@ -4,8 +4,9 @@ var canvas = document.querySelector("#renderCanvas");
 // Load the BABYLON 3D engine
 var engine = new BABYLON.Engine(canvas, true);
 
-var camera, light, pointer, ground, gui, hero;
+var camera, light, pointer, ground, gui, hero, pauseScreen, shadowGenerator;
 var mousePressed = false;
+var pause = false;
 
 function createScene() {
   scene = new BABYLON.Scene(engine);
@@ -25,6 +26,9 @@ function createScene() {
     scene
   );
 
+  shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
+  shadowGenerator.usePercentageCloserFiltering = true;
+
   gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
   ground = BABYLON.Mesh.CreateGround("ground", 1500, 1500, 2, scene);
@@ -36,6 +40,7 @@ function createScene() {
   ground.material.diffuseTexture.uScale = 24;
   ground.material.diffuseTexture.vScale = 24;
   ground.material.specularColor = BABYLON.Color3.Black();
+  ground.receiveShadows = true;
 }
 
 function initGame() {
@@ -45,10 +50,10 @@ function initGame() {
     new ECS.components.Appearance(
       hero.components.coordinates.position,
       "hero",
-      true
+      false
     )
   );
-  ECS.entities[hero.id] = hero;
+  hero.addComponent(new ECS.components.Vitals(100));
   camera.lockedTarget = hero.components.appearance.mesh;
 
   for (var i = 0; i < 10; i++) {
@@ -65,8 +70,34 @@ function initGame() {
       )
     );
     ennemy.addComponent(new ECS.components.Target(hero));
-    ECS.entities[ennemy.id] = ennemy;
   }
+
+  pauseScreen = new BABYLON.GUI.TextBlock();
+  pauseScreen.text = "PAUSE";
+  pauseScreen.color = "white";
+  pauseScreen.fontSize = 100;
+  pauseScreen.isVisible = false;
+  gui.addControl(pauseScreen);
+
+  text1 = new BABYLON.GUI.TextBlock();
+  text1.text = "xp: " + hero.experience;
+  text1.color = "white";
+  text1.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+  text1.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+  text1.fontSize = 16;
+  text1.paddingBottom = "5px";
+  text1.paddingLeft = "5px";
+  gui.addControl(text1);
+
+  text2 = new BABYLON.GUI.TextBlock();
+  text2.color = "white";
+  text2.textHorizontalAlignment =
+    BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+  text2.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+  text2.fontSize = 16;
+  text2.paddingTop = "5px";
+  text2.paddingRight = "5px";
+  gui.addControl(text2);
 }
 
 createScene();
@@ -89,16 +120,22 @@ engine.runRenderLoop(function () {
     light.position.z = hero.components.coordinates.position.z;
   }
 
-  for (var i = 0; i < systems.length; i++) {
-    systems[i](ECS.entities);
+  if (!pause) {
+    for (var i = 0; i < systems.length; i++) {
+      systems[i](ECS.entities);
+    }
   }
 
   keyHandler();
 
   scene.render();
+
+  text1.text =
+    hero.components.vitals.life + " / " + hero.components.vitals.maxLife;
+  text2.text = engine.getFps().toFixed() + "fps / " + scene.meshes.length;
 });
 
-// Watch for browser/canvas resize events
+// Watch for browser/canvas resize eventsw
 window.addEventListener("resize", function () {
   engine.resize();
 });

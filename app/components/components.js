@@ -1,5 +1,6 @@
 // Appearance
 ECS.components.Appearance = function (position, type, hasLabel) {
+  var hasShadow = true;
   if (type === "hero") {
     this.mesh = BABYLON.MeshBuilder.CreateBox(
       "",
@@ -11,6 +12,7 @@ ECS.components.Appearance = function (position, type, hasLabel) {
     this.mesh.material.specularColor = BABYLON.Color3.Black();
     this.mesh.unit = this;
     this.mesh.position = position;
+    hasShadow = false;
   } else if (type === "ennemy") {
     this.mesh = BABYLON.MeshBuilder.CreateBox(
       "",
@@ -41,7 +43,17 @@ ECS.components.Appearance = function (position, type, hasLabel) {
     this.label.linkOffsetY = -100;
   }
 
+  if (hasShadow) {
+    shadowGenerator.getShadowMap().renderList.push(this.mesh);
+  }
+
   return this;
+};
+ECS.components.Appearance.prototype.remove = function () {
+  this.mesh.dispose();
+  if (this.label) {
+    this.label.dispose();
+  }
 };
 ECS.components.Appearance.prototype.name = "appearance";
 
@@ -62,3 +74,12 @@ ECS.components.Target = function (target) {
   return this;
 };
 ECS.components.Target.prototype.name = "target";
+
+// Vitals
+ECS.components.Vitals = function (life) {
+  this.life = life;
+  this.maxLife = life;
+
+  return this;
+};
+ECS.components.Vitals.prototype.name = "vitals";
