@@ -59,14 +59,13 @@ function createScene() {
   ground = BABYLON.Mesh.CreateGround("ground", 1500, 1500, 0, state.scene);
   ground.material = new BABYLON.StandardMaterial("groundmat", state.scene);
   ground.material.diffuseTexture = new BABYLON.Texture(
-    "content/img/ground.jpg",
+    "content/img/tiles.jpg",
     state.scene
   );
   ground.material.diffuseTexture.uScale = 24;
   ground.material.diffuseTexture.vScale = 24;
   ground.material.specularColor = BABYLON.Color3.Black();
   ground.receiveShadows = true;
-  // ground.checkCollisions = true;
 }
 
 function initGame() {

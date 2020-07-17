@@ -19,11 +19,7 @@ export class Appearance {
         "selectcolor",
         state.scene
       );
-      // this.mesh.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
-      // this.mesh.material.specularColor = BABYLON.Color3.Black();
-      // this.mesh.unit = this;
       this.mesh.position = position;
-      // this.mesh.checkCollisions = true;
       hasShadow = false;
     } else if (type === "ennemy") {
       this.mesh = BABYLON.MeshBuilder.CreateBox(
@@ -35,11 +31,7 @@ export class Appearance {
         "selectcolor",
         state.scene
       );
-      // this.mesh.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
-      // this.mesh.material.specularColor = BABYLON.Color3.Black();
-      // this.mesh.unit = this;
       this.mesh.position = position;
-      // this.mesh.checkCollisions = true;
     } else if (type === "bullet") {
       this.mesh = BABYLON.MeshBuilder.CreateSphere(
         "",
@@ -50,9 +42,6 @@ export class Appearance {
         "selectcolor",
         state.scene
       );
-      // this.mesh.material.diffuseColor = new BABYLON.Color3(1, 1, 1);
-      // this.mesh.material.specularColor = BABYLON.Color3.Black();
-      // this.mesh.unit = this;
       this.mesh.position = position;
     }
 
