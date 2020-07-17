@@ -1,4 +1,4 @@
-import { state } from "../main";
+import { state } from "../game";
 
 export function move(entities) {
   let entity, dir;

@@ -1,9 +1,11 @@
 import * as BABYLON from "babylonjs";
 import * as BABYLON_GUI from "babylonjs-gui";
+import "../content/babylonjs.loaders";
 import { keyHandler } from "./controls";
 import { createEnnemy } from "./classes/ennemy";
 import { move } from "./systems/move";
 import { createHero } from "./classes/hero";
+import { state } from "./game";
 
 // Get the canvas element from the HTML
 const canvas = document.querySelector("#renderCanvas") as HTMLCanvasElement;
@@ -11,24 +13,7 @@ const canvas = document.querySelector("#renderCanvas") as HTMLCanvasElement;
 // Load the BABYLON 3D engine
 const engine = new BABYLON.Engine(canvas, true);
 
-export let camera, light, ground, pauseScreen, text1, text2;
-
-export const state = {
-  CPS: 60,
-  scene: null,
-  pause: false,
-  setPause: () => {
-    state.pause = !state.pause;
-    pauseScreen.isVisible = state.pause;
-  },
-  index: 0,
-  count: 0,
-  hero: null,
-  entities: {},
-  gui: null,
-  shadowGenerator: null,
-  pointer: null,
-};
+export let camera, light, ground, text1, text2;
 
 function createScene() {
   state.scene = new BABYLON.Scene(engine);
@@ -56,16 +41,48 @@ function createScene() {
 
   state.gui = BABYLON_GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
 
-  ground = BABYLON.Mesh.CreateGround("ground", 1500, 1500, 0, state.scene);
+  ground = BABYLON.Mesh.CreateGround("ground", 1000, 1000, 0, state.scene);
   ground.material = new BABYLON.StandardMaterial("groundmat", state.scene);
   ground.material.diffuseTexture = new BABYLON.Texture(
     "content/img/tiles.jpg",
     state.scene
   );
-  ground.material.diffuseTexture.uScale = 24;
-  ground.material.diffuseTexture.vScale = 24;
+  ground.material.diffuseTexture.uScale = 20;
+  ground.material.diffuseTexture.vScale = 20;
   ground.material.specularColor = BABYLON.Color3.Black();
   ground.receiveShadows = true;
+
+  var assetsManager = new BABYLON.AssetsManager(state.scene);
+  var meshTask = assetsManager.addMeshTask(
+    "task",
+    "",
+    "./content/",
+    "robot.glb"
+  );
+  meshTask.onSuccess = function (task) {
+    state.hero.components["appearance"].mesh = task.loadedMeshes[0];
+    task.loadedMeshes[0].position = new BABYLON.Vector3();
+    task.loadedMeshes[0].scaling = new BABYLON.Vector3(5, 5, 5);
+  };
+  meshTask.onError = function (task, message, exception) {
+    console.log(message, exception);
+  };
+  assetsManager.load();
+  // BABYLON.SceneLoader.ImportMesh(
+  //   "",
+  //   "./content/",
+  //   "robot.glb",
+  //   state.scene,
+  //   function (meshes, particleSystems, skeletons) {
+  //     // BABYLON.Mesh.MergeMeshes(meshes);
+  //     meshes[0].position = new BABYLON.Vector3(0, 5, 0);
+  //     meshes[0].scaling = new BABYLON.Vector3(5, 5, 5);
+  //     meshes[0].material = new BABYLON.StandardMaterial(
+  //       "selectcolor",
+  //       state.scene
+  //     );
+  //   }
+  // );
 }
 
 function initGame() {
@@ -76,12 +93,12 @@ function initGame() {
     createEnnemy(state.hero);
   }
 
-  pauseScreen = new BABYLON_GUI.TextBlock();
-  pauseScreen.text = "PAUSE";
-  pauseScreen.color = "white";
-  pauseScreen.fontSize = 100;
-  pauseScreen.isVisible = false;
-  state.gui.addControl(pauseScreen);
+  state.pauseScreen = new BABYLON_GUI.TextBlock();
+  state.pauseScreen.text = "PAUSE";
+  state.pauseScreen.color = "white";
+  state.pauseScreen.fontSize = 100;
+  state.pauseScreen.isVisible = false;
+  state.gui.addControl(state.pauseScreen);
 
   text1 = new BABYLON_GUI.TextBlock();
   text1.text = "xp: " + state.hero.experience;

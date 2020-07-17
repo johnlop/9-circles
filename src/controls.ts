@@ -1,10 +1,10 @@
-import { state } from "./main";
+import { state } from "./game";
 
 export function keyHandler() {
   if (map["ArrowDown"] || map["KeyS"]) {
     state.hero.components.appearance.mesh.translate(
       BABYLON.Axis.Z,
-      -0.5,
+      -10 / state.CPS,
       BABYLON.Space.LOCAL
     );
     state.hero.components.coordinates.position =
@@ -12,7 +12,7 @@ export function keyHandler() {
   } else if (map["ArrowUp"] || map["KeyW"]) {
     state.hero.components.appearance.mesh.translate(
       BABYLON.Axis.Z,
-      map["ShiftLeft"] ? 1 : 0.5,
+      map["ShiftLeft"] ? 20 / state.CPS : 10 / state.CPS,
       BABYLON.Space.LOCAL
     );
     state.hero.components.coordinates.position =
@@ -21,7 +21,7 @@ export function keyHandler() {
   if (map["ArrowRight"] || map["KeyD"]) {
     state.hero.components.appearance.mesh.translate(
       BABYLON.Axis.X,
-      0.5,
+      10 / state.CPS,
       BABYLON.Space.LOCAL
     );
     state.hero.components.coordinates.position =
@@ -29,7 +29,7 @@ export function keyHandler() {
   } else if (map["ArrowLeft"] || map["KeyA"]) {
     state.hero.components.appearance.mesh.translate(
       BABYLON.Axis.X,
-      -0.5,
+      -10 / state.CPS,
       BABYLON.Space.LOCAL
     );
     state.hero.components.coordinates.position =

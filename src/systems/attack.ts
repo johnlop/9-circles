@@ -1,5 +1,3 @@
-// ECS - System - Attack
-// --------------------------------------
 export const attack = function (entities) {
   let entity, dir;
 

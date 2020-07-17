@@ -1,4 +1,4 @@
-import { state } from "../main";
+import { state } from "../game";
 
 export class Entity {
   public id: Number;

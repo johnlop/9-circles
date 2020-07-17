@@ -1,4 +1,4 @@
-import { state } from "../main";
+import { state } from "../game";
 import { Entity } from "../entities/entity";
 
 // Appearance

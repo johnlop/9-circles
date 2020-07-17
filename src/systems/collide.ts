@@ -1,5 +1,3 @@
-// ECS - System - Collide
-// --------------------------------------
 export const collide = function (entities) {
   let obj1, obj2;
 
