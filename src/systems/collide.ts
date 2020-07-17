@@ -1,6 +1,6 @@
 // ECS - System - Collide
 // --------------------------------------
-ECS.systems.collide = function (entities) {
+export const collide = function (entities) {
   let obj1, obj2;
 
   for (let id1 in entities) {

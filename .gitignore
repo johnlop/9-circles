@@ -1,0 +1,4 @@
+
+node_modules/
+#dist folder with transpiled JS
+dist/

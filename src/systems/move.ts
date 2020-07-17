@@ -1,6 +1,6 @@
-// ECS - System - Move
-// --------------------------------------
-ECS.systems.move = function (entities) {
+import { state } from "../main";
+
+export function move(entities) {
   let entity, dir;
 
   for (let id in entities) {
@@ -24,7 +24,7 @@ ECS.systems.move = function (entities) {
       if (entity.components.coordinates.direction) {
         dir = entity.components.coordinates.direction
           .normalize()
-          .scaleInPlace(entity.components.coordinates.speed / CPS);
+          .scaleInPlace(entity.components.coordinates.speed / state.CPS);
         entity.components.appearance.mesh.moveWithCollisions(dir);
       }
 
@@ -32,11 +32,11 @@ ECS.systems.move = function (entities) {
       if (
         BABYLON.Vector3.Distance(
           entity.components.coordinates.position,
-          hero.components.coordinates.position
+          state.hero.components.coordinates.position
         ) > 100
       ) {
         entity.remove();
       }
     }
   }
-};
+}
