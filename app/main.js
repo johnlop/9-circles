@@ -45,35 +45,11 @@ function createScene() {
 }
 
 function initGame() {
-  hero = new ECS.Entity();
-  hero.addComponent(new ECS.components.Coordinates());
-  hero.addComponent(
-    new ECS.components.Appearance(
-      hero.components.coordinates.position,
-      "hero",
-      false
-    )
-  );
-  hero.addComponent(new ECS.components.Vitals(100));
-  hero.skills = [];
-  hero.skills.push(new Skill("Space", true, 500, 1, 10, 50, 100));
-  hero.skills.push(new Skill("KeyE", true, 2000, 1, 10, 20, 50));
+  hero = new Hero();
   camera.lockedTarget = hero.components.appearance.mesh;
 
   for (let i = 0; i < 10; i++) {
-    let ennemy = new ECS.Entity();
-    ennemy.addComponent(new ECS.components.Coordinates());
-    ennemy.components.coordinates.position.x = Math.random() * 100 - 50;
-    ennemy.components.coordinates.position.z = Math.random() * 100 - 50;
-    ennemy.components.coordinates.speed = 5;
-    ennemy.addComponent(
-      new ECS.components.Appearance(
-        ennemy.components.coordinates.position,
-        "ennemy",
-        true
-      )
-    );
-    ennemy.addComponent(new ECS.components.Target(hero));
+    new Ennemy();
   }
 
   pauseScreen = new BABYLON.GUI.TextBlock();

@@ -51,6 +51,7 @@ onkeyup = function (e) {
   }
 };
 
+// Chrome says it's not a function but it definitely works
 document.unbind("keypress");
 document.addEventListener("keydown", onkeydown, false);
 document.addEventListener("keyup", onkeyup, false);
