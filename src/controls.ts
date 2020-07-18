@@ -3,12 +3,12 @@ import { camera } from './main';
 
 export function keyHandler(): void {
     if (map['ArrowDown'] || map['KeyS']) {
-        state.hero.components.appearance.mesh.translate(BABYLON.Axis.Z, 10 / state.CPS, BABYLON.Space.LOCAL);
+        state.hero.components.appearance.mesh.translate(BABYLON.Axis.Z, 15 / state.CPS, BABYLON.Space.LOCAL);
         state.hero.components.coordinates.position = state.hero.components.appearance.mesh.position;
     } else if (map['ArrowUp'] || map['KeyW']) {
         state.hero.components.appearance.mesh.translate(
             BABYLON.Axis.Z,
-            map['ShiftLeft'] ? -20 / state.CPS : -10 / state.CPS,
+            map['ShiftLeft'] ? -25 / state.CPS : -15 / state.CPS,
             BABYLON.Space.LOCAL,
         );
         state.hero.components.coordinates.position = state.hero.components.appearance.mesh.position;

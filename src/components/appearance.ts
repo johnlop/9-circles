@@ -11,14 +11,11 @@ export class Appearance {
         if (type === 'hero') {
             this.mesh = mesh;
             this.mesh.material = new BABYLON.StandardMaterial('selectcolor', state.scene);
-            const quaternion = BABYLON.Quaternion.RotationAxis(BABYLON.Axis.Y, Math.PI / 2);
-            this.mesh.rotationQuaternion = quaternion;
             this.mesh.position = position;
             hasShadow = false;
         } else if (type === 'ennemy') {
-            this.mesh = BABYLON.MeshBuilder.CreateBox('', { size: 1, height: 6 }, state.scene);
+            this.mesh = mesh;
             this.mesh.material = new BABYLON.StandardMaterial('selectcolor', state.scene);
-            this.mesh.setPivotMatrix(BABYLON.Matrix.Translation(0, -3, 0));
             this.mesh.position = position;
         } else if (type === 'bullet') {
             this.mesh = BABYLON.MeshBuilder.CreateSphere('', { diameter: 1 }, state.scene);

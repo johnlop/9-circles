@@ -1,6 +1,6 @@
 import * as BABYLON from 'babylonjs';
 import * as BABYLON_GUI from 'babylonjs-gui';
-import '../content/babylonjs.loaders';
+import '../assets/babylonjs.loaders';
 import { keyHandler } from './controls';
 import { createEnnemy } from './classes/ennemy';
 import { move } from './systems/move';
@@ -12,6 +12,8 @@ const canvas = document.querySelector('#renderCanvas') as HTMLCanvasElement;
 
 // Load the BABYLON 3D engine
 const engine = new BABYLON.Engine(canvas, true);
+
+const systems = [move];
 
 export let camera, light, ground, text1, text2;
 
@@ -32,29 +34,30 @@ function createScene() {
 
     ground = BABYLON.Mesh.CreateGround('ground', 1000, 1000, 0, state.scene);
     ground.material = new BABYLON.StandardMaterial('groundmat', state.scene);
-    ground.material.diffuseTexture = new BABYLON.Texture('content/img/tiles.jpg', state.scene);
+    ground.material.diffuseTexture = new BABYLON.Texture('assets/img/tiles.jpg', state.scene);
     ground.material.diffuseTexture.uScale = 20;
     ground.material.diffuseTexture.vScale = 20;
     ground.material.specularColor = BABYLON.Color3.Black();
     ground.receiveShadows = true;
 
     const assetsManager = new BABYLON.AssetsManager(state.scene);
-    const meshTask = assetsManager.addMeshTask('task', '', './content/', 'd4nt3.glb');
-    meshTask.onSuccess = function (task) {
-        initGame(task.loadedMeshes);
+    assetsManager.addMeshTask('d4nt3', '', './assets/', 'd4nt3.glb');
+    assetsManager.addMeshTask('zombie', '', './assets/', 'zombie.glb');
+    assetsManager.onTaskError = function (task) {
+        console.log(`Error: task ${task.name}`);
     };
-    meshTask.onError = function (task, message, exception) {
-        console.log(message, exception);
+    assetsManager.onFinish = function (tasks) {
+        initGame(tasks);
     };
     assetsManager.load();
 }
 
-function initGame(meshes) {
-    state.hero = createHero(meshes[0]);
+function initGame(tasks) {
+    state.hero = createHero(tasks[0].loadedMeshes[0].clone());
     camera.lockedTarget = state.hero.components['appearance'].mesh;
 
     for (let i = 0; i < 10; i++) {
-        createEnnemy(state.hero);
+        createEnnemy(tasks[1].loadedMeshes[0].clone(), state.hero);
     }
 
     state.pauseScreen = new BABYLON_GUI.TextBlock();
@@ -82,6 +85,12 @@ function initGame(meshes) {
     text2.paddingTop = '5px';
     text2.paddingRight = '5px';
     state.gui.addControl(text2);
+
+    tasks.forEach((task) => {
+        task.loadedMeshes[0].dispose();
+    });
+
+    setInterval(systemLoop, 1000 / state.CPS);
 }
 
 createScene();
@@ -95,9 +104,6 @@ engine.runRenderLoop(function () {
     }
     state.scene.render();
 });
-
-const systems = [move];
-setInterval(systemLoop, 1000 / state.CPS);
 
 function systemLoop() {
     if (!state.pause) {
