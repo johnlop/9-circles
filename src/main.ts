@@ -20,7 +20,7 @@ function createScene() {
     state.scene.clearColor = new BABYLON.Color3(1, 1, 1);
     state.scene.checkCollisions = true;
 
-    light = new BABYLON.PointLight('light', new BABYLON.Vector3(0, 12, 0), state.scene);
+    light = new BABYLON.PointLight('light', new BABYLON.Vector3(0, 10, 0), state.scene);
     light.intensity = 1;
 
     camera = new BABYLON.ArcRotateCamera('Camera', 1, 0.8, 80, new BABYLON.Vector3(0, 0, 0), state.scene);

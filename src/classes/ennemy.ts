@@ -1,5 +1,6 @@
 import { Entity } from '../entities/entity';
-import { Coordinates, Appearance, Target } from '../components/components';
+import { Appearance } from '../components/appearance';
+import { Coordinates } from '../components/coordinates';
 
 export const createEnnemy = function (target) {
     const ennemy = new Entity();

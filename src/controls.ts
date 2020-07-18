@@ -1,13 +1,14 @@
 import { state } from './game';
+import { camera } from './main';
 
-export function keyHandler() {
+export function keyHandler(): void {
     if (map['ArrowDown'] || map['KeyS']) {
-        state.hero.components.appearance.mesh.translate(BABYLON.Axis.Z, -10 / state.CPS, BABYLON.Space.LOCAL);
+        state.hero.components.appearance.mesh.translate(BABYLON.Axis.Z, 10 / state.CPS, BABYLON.Space.LOCAL);
         state.hero.components.coordinates.position = state.hero.components.appearance.mesh.position;
     } else if (map['ArrowUp'] || map['KeyW']) {
         state.hero.components.appearance.mesh.translate(
             BABYLON.Axis.Z,
-            map['ShiftLeft'] ? 20 / state.CPS : 10 / state.CPS,
+            map['ShiftLeft'] ? -20 / state.CPS : -10 / state.CPS,
             BABYLON.Space.LOCAL,
         );
         state.hero.components.coordinates.position = state.hero.components.appearance.mesh.position;
@@ -40,3 +41,7 @@ onkeyup = function (e) {
 
 document.addEventListener('keydown', onkeydown, false);
 document.addEventListener('keyup', onkeyup, false);
+document.addEventListener('wheel', (event) => {
+    const delta = Math.sign(event.deltaY);
+    camera.radius += delta;
+});

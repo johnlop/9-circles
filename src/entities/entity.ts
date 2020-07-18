@@ -1,9 +1,10 @@
 import { state } from '../game';
+import { Skill } from '../classes/skill';
 
 export class Entity {
     public id: number;
     public components: any;
-    public skills: any[];
+    public skills: Skill[];
 
     public constructor() {
         state.index++;
@@ -14,7 +15,7 @@ export class Entity {
         this.skills = [];
     }
 
-    public remove() {
+    public remove(): void {
         for (const componentName in this.components) {
             this.removeComponent(componentName);
         }
@@ -22,12 +23,12 @@ export class Entity {
         state.count--;
     }
 
-    public addComponent(component) {
+    public addComponent(component): void {
         // Add component data to the entity
         this.components[component.name] = component;
     }
 
-    public removeComponent(componentName) {
+    public removeComponent(componentName): void {
         // Remove component data by removing the reference to it.
         // Allows either a component function or a string of a component name to be
         // passed in

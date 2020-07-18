@@ -1,5 +1,6 @@
 import { Entity } from '../entities/entity';
-import { Coordinates, Appearance } from '../components/components';
+import { Appearance } from '../components/appearance';
+import { Coordinates } from '../components/coordinates';
 
 export class Skill {
     public key: string;

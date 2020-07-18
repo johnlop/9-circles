@@ -1,6 +1,8 @@
 import { Entity } from '../entities/entity';
-import { Appearance, Coordinates, Vitals } from '../components/components';
+import { Appearance } from '../components/appearance';
 import { Skill } from './skill';
+import { Coordinates } from '../components/coordinates';
+import { Vitals } from '../components/vitals';
 
 export const createHero = function (mesh) {
     const hero = new Entity();

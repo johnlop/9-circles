@@ -1,5 +1,4 @@
 import { state } from '../game';
-import { Entity } from '../entities/entity';
 
 // Appearance
 export class Appearance {
@@ -14,7 +13,6 @@ export class Appearance {
             this.mesh.material = new BABYLON.StandardMaterial('selectcolor', state.scene);
             const quaternion = BABYLON.Quaternion.RotationAxis(BABYLON.Axis.Y, Math.PI / 2);
             this.mesh.rotationQuaternion = quaternion;
-            // this.mesh.setPivotMatrix(BABYLON.Matrix.Translation(0, 2, 0));
             this.mesh.position = position;
             hasShadow = false;
         } else if (type === 'ennemy') {
@@ -45,46 +43,10 @@ export class Appearance {
         return this;
     }
 
-    public remove() {
+    public remove(): void {
         this.mesh.dispose();
         if (this.label) {
             this.label.dispose();
         }
-    }
-}
-
-// Coordinates
-export class Coordinates {
-    public name = 'coordinates';
-    public position: BABYLON.Vector3;
-    public direction: BABYLON.Vector3;
-    public speed: number;
-
-    public constructor() {
-        this.position = new BABYLON.Vector3(0, 0, 0);
-        this.direction = new BABYLON.Vector3(0, 0, 0);
-        this.speed = 0;
-    }
-}
-
-// Target
-export class Target {
-    public name = 'target';
-    public entity: Entity;
-
-    public constructor(target) {
-        this.entity = target;
-    }
-}
-
-// Vitals
-export class Vitals {
-    public name = 'vitals';
-    public life: number;
-    public maxLife: number;
-
-    public constructor(life) {
-        this.life = life;
-        this.maxLife = life;
     }
 }
