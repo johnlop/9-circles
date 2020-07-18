@@ -34,7 +34,7 @@ export class Appearance {
         }
 
         if (hasShadow) {
-            state.shadowGenerator.getShadowMap().renderList.push(this.mesh);
+            state.shadowGenerator.addShadowCaster(this.mesh);
         }
 
         return this;
