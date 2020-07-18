@@ -1,42 +1,39 @@
-import { state } from "../game";
+import { state } from '../game';
 
 export function move(entities) {
-  let entity, dir;
+    let entity, dir;
 
-  for (let id in entities) {
-    entity = entities[id];
+    for (const id in entities) {
+        entity = entities[id];
 
-    if (entity.components.coordinates) {
-      if (entity.components.target) {
-        entity.components.coordinates.direction = entity.components.target.entity.components.coordinates.position.subtract(
-          entity.components.coordinates.position
-        );
-        entity.components.coordinates.look =
-          entity.components.target.entity.components.coordinates.position;
-      }
+        if (entity.components.coordinates) {
+            if (entity.components.target) {
+                entity.components.coordinates.direction = entity.components.target.entity.components.coordinates.position.subtract(
+                    entity.components.coordinates.position,
+                );
+                entity.components.coordinates.look = entity.components.target.entity.components.coordinates.position;
+            }
 
-      if (entity.components.coordinates.look) {
-        entity.components.appearance.mesh.lookAt(
-          entity.components.coordinates.look
-        );
-      }
+            if (entity.components.coordinates.look) {
+                entity.components.appearance.mesh.lookAt(entity.components.coordinates.look);
+            }
 
-      if (entity.components.coordinates.direction) {
-        dir = entity.components.coordinates.direction
-          .normalize()
-          .scaleInPlace(entity.components.coordinates.speed / state.CPS);
-        entity.components.appearance.mesh.moveWithCollisions(dir);
-      }
+            if (entity.components.coordinates.direction) {
+                dir = entity.components.coordinates.direction
+                    .normalize()
+                    .scaleInPlace(entity.components.coordinates.speed / state.CPS);
+                entity.components.appearance.mesh.moveWithCollisions(dir);
+            }
 
-      // Remove entities that have gone too far
-      if (
-        BABYLON.Vector3.Distance(
-          entity.components.coordinates.position,
-          state.hero.components.coordinates.position
-        ) > 100
-      ) {
-        entity.remove();
-      }
+            // Remove entities that have gone too far
+            if (
+                BABYLON.Vector3.Distance(
+                    entity.components.coordinates.position,
+                    state.hero.components.coordinates.position,
+                ) > 100
+            ) {
+                entity.remove();
+            }
+        }
     }
-  }
 }
