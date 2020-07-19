@@ -1,46 +1,62 @@
 import { state } from '../game';
 import { Skill } from '../classes/skill';
 
-export class Entity {
-    public id: number;
-    public components: any;
-    public skills: Skill[];
+export const createEntity = (): number => {
+    state.index++;
+    state.count++;
+    return state.index;
+};
 
-    public constructor() {
-        state.index++;
-        state.count++;
-        this.id = state.index;
-        state.entities[this.id.toString()] = this;
-        this.components = {};
-        this.skills = [];
+export const addComponent = (component, id): void => {
+    state.cpts[component.name][id] = component;
+};
+
+export const removeComponent = (component, id): void => {
+    if (state.cpts[component.name][id].remove) {
+        state.cpts[component.name][id].remove();
     }
+    delete state.cpts[component.name][id];
+};
 
-    public remove(): void {
-        for (const componentName in this.components) {
-            this.removeComponent(componentName);
-        }
-        delete state.entities[this.id.toString()];
-        state.count--;
-    }
+// export class Entity {
+//     public id: number;
+//     public components: any;
+//     public skills: Skill[];
 
-    public addComponent(component): void {
-        // Add component data to the entity
-        this.components[component.name] = component;
-    }
+//     public constructor() {
+//         state.index++;
+//         state.count++;
+//         this.id = state.index;
+//         this.components = {};
+//         this.skills = [];
+//     }
 
-    public removeComponent(componentName): void {
-        // Remove component data by removing the reference to it.
-        // Allows either a component function or a string of a component name to be
-        // passed in
-        let name = componentName; // assume a string was passed in
+//     public remove(): void {
+//         for (const componentName in this.components) {
+//             this.removeComponent(componentName);
+//         }
+//         delete state.entities[this.id.toString()];
+//         state.count--;
+//     }
 
-        if (typeof componentName === 'function') {
-            // get the name from the prototype of the passed component function
-            name = componentName.prototype.name;
-        }
+//     public addComponent(component): void {
+//         // Add component data to the entity
+//         this.components[component.name] = component;
+//     }
 
-        if (this.components[name].remove) this.components[name].remove();
+//     public removeComponent(componentName): void {
+//         // Remove component data by removing the reference to it.
+//         // Allows either a component function or a string of a component name to be
+//         // passed in
+//         let name = componentName; // assume a string was passed in
 
-        delete this.components[name];
-    }
-}
+//         if (typeof componentName === 'function') {
+//             // get the name from the prototype of the passed component function
+//             name = componentName.prototype.name;
+//         }
+
+//         if (this.components[name].remove) this.components[name].remove();
+
+//         delete this.components[name];
+//     }
+// }

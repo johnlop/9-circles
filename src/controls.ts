@@ -3,26 +3,26 @@ import { camera } from './main';
 
 export function keyHandler(): void {
     if (map['ArrowDown'] || map['KeyS']) {
-        state.hero.components.appearance.mesh.translate(BABYLON.Axis.Z, 15 / state.CPS, BABYLON.Space.LOCAL);
-        state.hero.components.coordinates.position = state.hero.components.appearance.mesh.position;
+        state.cpts['appearance'][state.heroId].mesh.translate(BABYLON.Axis.Z, 15 / state.CPS, BABYLON.Space.LOCAL);
+        state.cpts['coordinates'][state.heroId].position = state.cpts['appearance'][state.heroId].mesh.position;
     } else if (map['ArrowUp'] || map['KeyW']) {
-        state.hero.components.appearance.mesh.translate(
+        state.cpts['appearance'][state.heroId].mesh.translate(
             BABYLON.Axis.Z,
             map['ShiftLeft'] ? -25 / state.CPS : -15 / state.CPS,
             BABYLON.Space.LOCAL,
         );
-        state.hero.components.coordinates.position = state.hero.components.appearance.mesh.position;
+        state.cpts['coordinates'][state.heroId].position = state.cpts['appearance'][state.heroId].mesh.position;
     }
     if (map['ArrowRight'] || map['KeyD']) {
-        state.hero.components.appearance.mesh.translate(BABYLON.Axis.X, 10 / state.CPS, BABYLON.Space.LOCAL);
-        state.hero.components.coordinates.position = state.hero.components.appearance.mesh.position;
+        state.cpts['appearance'][state.heroId].mesh.translate(BABYLON.Axis.X, 10 / state.CPS, BABYLON.Space.LOCAL);
+        state.cpts['coordinates'][state.heroId].position = state.cpts['appearance'][state.heroId].mesh.position;
     } else if (map['ArrowLeft'] || map['KeyA']) {
-        state.hero.components.appearance.mesh.translate(BABYLON.Axis.X, -10 / state.CPS, BABYLON.Space.LOCAL);
-        state.hero.components.coordinates.position = state.hero.components.appearance.mesh.position;
+        state.cpts['appearance'][state.heroId].mesh.translate(BABYLON.Axis.X, -10 / state.CPS, BABYLON.Space.LOCAL);
+        state.cpts['coordinates'][state.heroId].position = state.cpts['appearance'][state.heroId].mesh.position;
     }
-    state.hero.skills.forEach((skill) => {
-        if (map[skill.key]) skill.use(state.hero, state.pointer);
-    });
+    // state.heroId.skills.forEach((skill) => {
+    //     if (map[skill.key]) skill.use(state.heroId, state.pointer);
+    // });
 }
 
 const map = {};

@@ -1,6 +1,7 @@
-import { Entity } from '../entities/entity';
+import { addComponent, createEntity } from '../entities/entity';
 import { Appearance } from '../components/appearance';
 import { Coordinates } from '../components/coordinates';
+import { state } from '../game';
 
 export class Skill {
     public key: string;
@@ -23,18 +24,20 @@ export class Skill {
         this.range = range;
     }
 
-    public use(user, targetPosition) {
+    public use(userId, targetPosition) {
         const now = Date.now();
         if (now - this.skillLastUsed > this.rateOfFire) {
             if (this.isProjectile) {
-                const bullet = new Entity();
-                bullet.addComponent(new Coordinates());
-                bullet.components['coordinates'].position = user.components.coordinates.position.clone();
-                bullet.addComponent(new Appearance(bullet.components['coordinates'].position, false));
-                bullet.components['coordinates'].speed = this.speed;
-                bullet.components['coordinates'].direction = targetPosition.subtract(
-                    bullet.components['coordinates'].position,
+                const id = createEntity();
+                addComponent(
+                    new Coordinates(
+                        state.cpts['coordinates'][userId].position.clone(),
+                        targetPosition.subtract(state.cpts['coordinates'][userId].position),
+                        this.speed,
+                    ),
+                    id,
                 );
+                addComponent(new Appearance(state.cpts['coordinates'][id].position, false), id);
             }
             this.skillLastUsed = now;
         }

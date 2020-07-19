@@ -1,11 +1,9 @@
-import { Entity } from '../entities/entity';
-
 // Target
 export class Target {
     public name = 'target';
-    public entity: Entity;
+    public id: number;
 
-    public constructor(target) {
-        this.entity = target;
+    public constructor(id) {
+        this.id = id;
     }
 }

@@ -8,8 +8,8 @@ export const state = {
     },
     index: 0,
     count: 0,
-    hero: null,
-    entities: {},
+    heroId: null,
+    cpts: {},
     gui: null,
     pointer: null,
 };

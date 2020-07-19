@@ -6,7 +6,6 @@ import { createEnemy } from './classes/enemy';
 import { move } from './systems/move';
 import { createHero } from './classes/hero';
 import { state } from './game';
-import { Entity } from './entities/entity';
 import { Coordinates } from './components/coordinates';
 import { Appearance } from './components/appearance';
 
@@ -67,18 +66,23 @@ function loadAssets() {
 }
 
 function initGame() {
-    state.hero = createHero(library['d4nt3']);
-    camera.lockedTarget = state.hero.components['appearance'].mesh;
+    state.cpts['appearance'] = {};
+    state.cpts['vitals'] = {};
+    state.cpts['coordinates'] = {};
+    state.cpts['target'] = {};
+
+    state.heroId = createHero(library['d4nt3']);
+    camera.lockedTarget = state.cpts['appearance'][state.heroId].mesh;
 
     for (let i = 0; i < 2; i++) {
-        createEnemy(library['zombie'], state.hero);
+        createEnemy(library['zombie'], state.heroId);
     }
 
-    const trees = new Entity();
-    trees.addComponent(new Coordinates());
-    trees.components['coordinates'].position.x = Math.random() * 100 - 50;
-    trees.components['coordinates'].position.z = Math.random() * 100 - 50;
-    trees.addComponent(new Appearance(trees.components['coordinates'].position, false, library['trees'], true));
+    // const trees = new Entity();
+    // trees.addComponent(new Coordinates());
+    // trees.components['coordinates'].position.x = Math.random() * 100 - 50;
+    // trees.components['coordinates'].position.z = Math.random() * 100 - 50;
+    // trees.addComponent(new Appearance(trees.components['coordinates'].position, false, library['trees'], true));
 
     state.pauseScreen = new BABYLON_GUI.TextBlock();
     state.pauseScreen.text = 'PAUSE';
@@ -88,7 +92,7 @@ function initGame() {
     state.gui.addControl(state.pauseScreen);
 
     text1 = new BABYLON_GUI.TextBlock();
-    text1.text = 'xp: ' + state.hero.experience;
+    text1.text = 'xp: ';
     text1.color = 'white';
     text1.textHorizontalAlignment = BABYLON_GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
     text1.textVerticalAlignment = BABYLON_GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
@@ -124,18 +128,18 @@ engine.runRenderLoop(function () {
 function systemLoop() {
     if (!state.pause) {
         if (state.pointer) {
-            state.hero.components['coordinates'].look = state.pointer;
-            light.position.x = state.hero.components['coordinates'].position.x;
-            light.position.z = state.hero.components['coordinates'].position.z;
+            state.cpts['coordinates'][state.heroId].look = state.pointer;
+            light.position.x = state.cpts['coordinates'][state.heroId].position.x;
+            light.position.z = state.cpts['coordinates'][state.heroId].position.z;
         }
 
         for (const i in systems) {
-            systems[i](state.entities);
+            systems[i]();
         }
 
         keyHandler();
 
-        text1.text = state.hero.components['vitals'].life + ' / ' + state.hero.components['vitals'].maxLife;
+        text1.text = state.cpts['vitals'][state.heroId].life + ' / ' + state.cpts['vitals'][state.heroId].maxLife;
         text2.text = engine.getFps().toFixed() + 'fps / ' + scene.meshes.length;
     }
 }

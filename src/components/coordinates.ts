@@ -5,9 +5,9 @@ export class Coordinates {
     public direction: BABYLON.Vector3;
     public speed: number;
 
-    public constructor() {
-        this.position = new BABYLON.Vector3(0, 0, 0);
-        this.direction = new BABYLON.Vector3(0, 0, 0);
-        this.speed = 0;
+    public constructor(position, direction, speed) {
+        this.position = position;
+        this.direction = direction;
+        this.speed = speed;
     }
 }
