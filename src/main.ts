@@ -2,10 +2,13 @@ import * as BABYLON from 'babylonjs';
 import * as BABYLON_GUI from 'babylonjs-gui';
 import '../assets/babylonjs.loaders';
 import { keyHandler } from './controls';
-import { createEnnemy } from './classes/ennemy';
+import { createEnemy } from './classes/enemy';
 import { move } from './systems/move';
 import { createHero } from './classes/hero';
 import { state } from './game';
+import { Entity } from './entities/entity';
+import { Coordinates } from './components/coordinates';
+import { Appearance } from './components/appearance';
 
 // Get the canvas element from the HTML
 const canvas = document.querySelector('#renderCanvas') as HTMLCanvasElement;
@@ -14,7 +17,7 @@ const canvas = document.querySelector('#renderCanvas') as HTMLCanvasElement;
 const engine = new BABYLON.Engine(canvas, true);
 
 const systems = [move];
-const assets = ['d4nt3', 'zombie'];
+const assets = ['d4nt3', 'zombie', 'trees'];
 
 export let scene, camera, light, shadowGenerator, ground, text1, text2;
 export const library = {};
@@ -68,8 +71,14 @@ function initGame() {
     camera.lockedTarget = state.hero.components['appearance'].mesh;
 
     for (let i = 0; i < 2; i++) {
-        createEnnemy(library['zombie'], state.hero);
+        createEnemy(library['zombie'], state.hero);
     }
+
+    const trees = new Entity();
+    trees.addComponent(new Coordinates());
+    trees.components['coordinates'].position.x = Math.random() * 100 - 50;
+    trees.components['coordinates'].position.z = Math.random() * 100 - 50;
+    trees.addComponent(new Appearance(trees.components['coordinates'].position, false, library['trees'], true));
 
     state.pauseScreen = new BABYLON_GUI.TextBlock();
     state.pauseScreen.text = 'PAUSE';

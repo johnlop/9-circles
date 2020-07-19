@@ -30,7 +30,7 @@ export class Skill {
                 const bullet = new Entity();
                 bullet.addComponent(new Coordinates());
                 bullet.components['coordinates'].position = user.components.coordinates.position.clone();
-                bullet.addComponent(new Appearance(bullet.components['coordinates'].position, 'bullet', false));
+                bullet.addComponent(new Appearance(bullet.components['coordinates'].position, false));
                 bullet.components['coordinates'].speed = this.speed;
                 bullet.components['coordinates'].direction = targetPosition.subtract(
                     bullet.components['coordinates'].position,

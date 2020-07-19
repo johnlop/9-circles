@@ -7,22 +7,15 @@ export class Appearance {
     public mesh: BABYLON.Mesh;
     public label: BABYLON.GUI.TextBlock;
 
-    public constructor(position, type, hasLabel = false, mesh = null) {
-        let hasShadow = true;
-        if (type === 'hero') {
+    public constructor(position, hasLabel = false, mesh = null, hasShadow = true) {
+        if (mesh) {
             this.mesh = mesh.clone();
-            this.mesh.material = new BABYLON.StandardMaterial('selectcolor', scene);
-            this.mesh.position = position;
-            hasShadow = false;
-        } else if (type === 'ennemy') {
-            this.mesh = mesh.clone();
-            this.mesh.material = new BABYLON.StandardMaterial('selectcolor', scene);
-            this.mesh.position = position;
-        } else if (type === 'bullet') {
+        } else {
             this.mesh = BABYLON.MeshBuilder.CreateSphere('', { diameter: 1 }, scene);
-            this.mesh.material = new BABYLON.StandardMaterial('selectcolor', scene);
-            this.mesh.position = position;
         }
+
+        this.mesh.material = new BABYLON.StandardMaterial('selectcolor', scene);
+        this.mesh.position = position;
 
         if (hasLabel) {
             this.label = new BABYLON.GUI.TextBlock();

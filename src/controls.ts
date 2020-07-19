@@ -28,14 +28,14 @@ export function keyHandler(): void {
 const map = {};
 onkeydown = function (e) {
     map[e.code] = true;
-    e.stopPropagation();
-};
-onkeyup = function (e) {
-    map[e.code] = false;
     // Pause
     if (e.code === 'KeyP') {
         state.setPause();
     }
+    e.stopPropagation();
+};
+onkeyup = function (e) {
+    map[e.code] = false;
     e.stopPropagation();
 };
 
