@@ -14,50 +14,61 @@ const canvas = document.querySelector('#renderCanvas') as HTMLCanvasElement;
 const engine = new BABYLON.Engine(canvas, true);
 
 const systems = [move];
+const assets = ['d4nt3', 'zombie'];
 
-export let camera, light, ground, text1, text2;
+export let scene, camera, light, shadowGenerator, ground, text1, text2;
+export const library = {};
 
 function createScene() {
-    state.scene = new BABYLON.Scene(engine);
-    state.scene.clearColor = new BABYLON.Color3(1, 1, 1);
-    state.scene.checkCollisions = true;
+    scene = new BABYLON.Scene(engine);
+    scene.clearColor = new BABYLON.Color3(1, 1, 1);
+    scene.checkCollisions = true;
 
-    light = new BABYLON.PointLight('light', new BABYLON.Vector3(0, 10, 0), state.scene);
+    light = new BABYLON.PointLight('light', new BABYLON.Vector3(0, 10, 0), scene);
     light.intensity = 1;
 
-    camera = new BABYLON.ArcRotateCamera('Camera', 1, 0.8, 80, new BABYLON.Vector3(0, 0, 0), state.scene);
+    camera = new BABYLON.ArcRotateCamera('Camera', 1, 0.8, 80, new BABYLON.Vector3(0, 0, 0), scene);
 
-    state.shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
-    state.shadowGenerator.usePercentageCloserFiltering = true;
+    shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
+    shadowGenerator.usePercentageCloserFiltering = true;
 
     state.gui = BABYLON_GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
-    ground = BABYLON.Mesh.CreateGround('ground', 1000, 1000, 0, state.scene);
-    ground.material = new BABYLON.StandardMaterial('groundmat', state.scene);
-    ground.material.diffuseTexture = new BABYLON.Texture('assets/img/tiles.jpg', state.scene);
+    ground = BABYLON.Mesh.CreateGround('ground', 1000, 1000, 0, scene);
+    ground.material = new BABYLON.StandardMaterial('groundmat', scene);
+    ground.material.diffuseTexture = new BABYLON.Texture('assets/img/tiles.jpg', scene);
     ground.material.diffuseTexture.uScale = 20;
     ground.material.diffuseTexture.vScale = 20;
     ground.material.specularColor = BABYLON.Color3.Black();
     ground.receiveShadows = true;
 
-    const assetsManager = new BABYLON.AssetsManager(state.scene);
-    assetsManager.addMeshTask('d4nt3', '', './assets/', 'd4nt3.glb');
-    assetsManager.addMeshTask('zombie', '', './assets/', 'zombie.glb');
+    loadAssets();
+}
+
+function loadAssets() {
+    const assetsManager = new BABYLON.AssetsManager(scene);
+    assets.forEach((asset) => {
+        const task = assetsManager.addMeshTask(asset, '', './assets/', `${asset}.glb`);
+        task.onSuccess = function (t) {
+            t.loadedMeshes[0].setEnabled(false);
+            library[asset] = t.loadedMeshes[0];
+        };
+    });
     assetsManager.onTaskError = function (task) {
-        console.log(`Error: task ${task.name}`);
+        console.log(`Error: could not load ${task.name}`);
     };
-    assetsManager.onFinish = function (tasks) {
-        initGame(tasks);
+    assetsManager.onFinish = function () {
+        initGame();
     };
     assetsManager.load();
 }
 
-function initGame(tasks) {
-    state.hero = createHero(tasks[0].loadedMeshes[0].clone());
+function initGame() {
+    state.hero = createHero(library['d4nt3']);
     camera.lockedTarget = state.hero.components['appearance'].mesh;
 
-    for (let i = 0; i < 10; i++) {
-        createEnnemy(tasks[1].loadedMeshes[0].clone(), state.hero);
+    for (let i = 0; i < 2; i++) {
+        createEnnemy(library['zombie'], state.hero);
     }
 
     state.pauseScreen = new BABYLON_GUI.TextBlock();
@@ -86,10 +97,6 @@ function initGame(tasks) {
     text2.paddingRight = '5px';
     state.gui.addControl(text2);
 
-    tasks.forEach((task) => {
-        task.loadedMeshes[0].dispose();
-    });
-
     setInterval(systemLoop, 1000 / state.CPS);
 }
 
@@ -97,12 +104,12 @@ createScene();
 
 // Register a render loop to repeatedly render the state.scene
 engine.runRenderLoop(function () {
-    const pickResult = state.scene.pick(state.scene.pointerX, state.scene.pointerY);
+    const pickResult = scene.pick(scene.pointerX, scene.pointerY);
     if (pickResult.hit) {
         state.pointer = pickResult.pickedPoint;
         state.pointer.y = 0;
     }
-    state.scene.render();
+    scene.render();
 });
 
 function systemLoop() {
@@ -120,7 +127,7 @@ function systemLoop() {
         keyHandler();
 
         text1.text = state.hero.components['vitals'].life + ' / ' + state.hero.components['vitals'].maxLife;
-        text2.text = engine.getFps().toFixed() + 'fps / ' + state.scene.meshes.length;
+        text2.text = engine.getFps().toFixed() + 'fps / ' + scene.meshes.length;
     }
 }
 

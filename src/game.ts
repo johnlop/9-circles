@@ -1,6 +1,5 @@
 export const state = {
     CPS: 60,
-    scene: null,
     pause: false,
     pauseScreen: null,
     setPause: () => {
@@ -12,6 +11,5 @@ export const state = {
     hero: null,
     entities: {},
     gui: null,
-    shadowGenerator: null,
     pointer: null,
 };

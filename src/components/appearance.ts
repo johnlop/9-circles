@@ -1,4 +1,5 @@
 import { state } from '../game';
+import { scene, shadowGenerator } from '../main';
 
 // Appearance
 export class Appearance {
@@ -9,17 +10,17 @@ export class Appearance {
     public constructor(position, type, hasLabel = false, mesh = null) {
         let hasShadow = true;
         if (type === 'hero') {
-            this.mesh = mesh;
-            this.mesh.material = new BABYLON.StandardMaterial('selectcolor', state.scene);
+            this.mesh = mesh.clone();
+            this.mesh.material = new BABYLON.StandardMaterial('selectcolor', scene);
             this.mesh.position = position;
             hasShadow = false;
         } else if (type === 'ennemy') {
-            this.mesh = mesh;
-            this.mesh.material = new BABYLON.StandardMaterial('selectcolor', state.scene);
+            this.mesh = mesh.clone();
+            this.mesh.material = new BABYLON.StandardMaterial('selectcolor', scene);
             this.mesh.position = position;
         } else if (type === 'bullet') {
-            this.mesh = BABYLON.MeshBuilder.CreateSphere('', { diameter: 1 }, state.scene);
-            this.mesh.material = new BABYLON.StandardMaterial('selectcolor', state.scene);
+            this.mesh = BABYLON.MeshBuilder.CreateSphere('', { diameter: 1 }, scene);
+            this.mesh.material = new BABYLON.StandardMaterial('selectcolor', scene);
             this.mesh.position = position;
         }
 
@@ -34,7 +35,7 @@ export class Appearance {
         }
 
         if (hasShadow) {
-            state.shadowGenerator.addShadowCaster(this.mesh);
+            shadowGenerator.addShadowCaster(this.mesh);
         }
 
         return this;
