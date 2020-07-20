@@ -11,11 +11,11 @@ export const addComponent = (component, id): void => {
     state.cpts[component.name][id] = component;
 };
 
-export const removeComponent = (component, id): void => {
-    if (state.cpts[component.name][id].remove) {
-        state.cpts[component.name][id].remove();
+export const removeComponent = (componentName, id): void => {
+    if (state.cpts[componentName][id].remove) {
+        state.cpts[componentName][id].remove();
     }
-    delete state.cpts[component.name][id];
+    delete state.cpts[componentName][id];
 };
 
 // export class Entity {
