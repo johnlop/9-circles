@@ -3,12 +3,12 @@ import { camera } from './main';
 
 export function keyHandler(): void {
     if (map['ArrowDown'] || map['KeyS']) {
-        state.cpts['appearance'][state.heroId].mesh.translate(BABYLON.Axis.Z, 15 / state.CPS, BABYLON.Space.LOCAL);
+        state.cpts['appearance'][state.heroId].mesh.translate(BABYLON.Axis.Z, 20 / state.CPS, BABYLON.Space.LOCAL);
         state.cpts['coordinates'][state.heroId].position = state.cpts['appearance'][state.heroId].mesh.position;
     } else if (map['ArrowUp'] || map['KeyW']) {
         state.cpts['appearance'][state.heroId].mesh.translate(
             BABYLON.Axis.Z,
-            map['ShiftLeft'] ? -25 / state.CPS : -15 / state.CPS,
+            map['ShiftLeft'] ? -30 / state.CPS : -20 / state.CPS,
             BABYLON.Space.LOCAL,
         );
         state.cpts['coordinates'][state.heroId].position = state.cpts['appearance'][state.heroId].mesh.position;
@@ -20,9 +20,9 @@ export function keyHandler(): void {
         state.cpts['appearance'][state.heroId].mesh.translate(BABYLON.Axis.X, -10 / state.CPS, BABYLON.Space.LOCAL);
         state.cpts['coordinates'][state.heroId].position = state.cpts['appearance'][state.heroId].mesh.position;
     }
-    // state.heroId.skills.forEach((skill) => {
-    //     if (map[skill.key]) skill.use(state.heroId, state.pointer);
-    // });
+    state.skills.forEach((skill) => {
+        if (map[skill.key]) skill.use(state.heroId, state.pointer);
+    });
 }
 
 const map = {};
@@ -43,5 +43,5 @@ document.addEventListener('keydown', onkeydown, false);
 document.addEventListener('keyup', onkeyup, false);
 document.addEventListener('wheel', (event) => {
     const delta = Math.sign(event.deltaY);
-    camera.radius += delta;
+    camera.radius += 5 * delta;
 });

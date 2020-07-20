@@ -9,6 +9,7 @@ export const state = {
     index: 0,
     count: 0,
     heroId: null,
+    skills: [],
     cpts: {},
     gui: null,
     pointer: null,

@@ -1,5 +1,5 @@
 import { state } from '../game';
-import { removeComponent } from '../entities/entity';
+import { removeComponent, removeEntity } from '../entities/entity';
 
 export function move() {
     let coordinates, targetCoordinates, dir;
@@ -23,13 +23,8 @@ export function move() {
         }
 
         // Remove entities that have gone too far
-        if (
-            BABYLON.Vector3.Distance(
-                coordinates.position,
-                state.cpts['coordinates'][state.heroId].coordinates.position,
-            ) > 100
-        ) {
-            removeComponent('coordinates', id);
+        if (BABYLON.Vector3.Distance(coordinates.position, state.cpts['coordinates'][state.heroId].position) > 100) {
+            removeEntity(id);
         }
     }
 }

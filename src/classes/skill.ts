@@ -29,15 +29,16 @@ export class Skill {
         if (now - this.skillLastUsed > this.rateOfFire) {
             if (this.isProjectile) {
                 const id = createEntity();
+                const position = state.cpts['coordinates'][userId].position.clone();
                 addComponent(
                     new Coordinates(
-                        state.cpts['coordinates'][userId].position.clone(),
+                        position,
                         targetPosition.subtract(state.cpts['coordinates'][userId].position),
                         this.speed,
                     ),
                     id,
                 );
-                addComponent(new Appearance(state.cpts['coordinates'][id].position, false), id);
+                addComponent(new Appearance(position, false), id);
             }
             this.skillLastUsed = now;
         }

@@ -6,8 +6,7 @@ import { createEnemy } from './classes/enemy';
 import { move } from './systems/move';
 import { createHero } from './classes/hero';
 import { state } from './game';
-import { Coordinates } from './components/coordinates';
-import { Appearance } from './components/appearance';
+import { createTree } from './classes/tree';
 
 // Get the canvas element from the HTML
 const canvas = document.querySelector('#renderCanvas') as HTMLCanvasElement;
@@ -16,7 +15,7 @@ const canvas = document.querySelector('#renderCanvas') as HTMLCanvasElement;
 const engine = new BABYLON.Engine(canvas, true);
 
 const systems = [move];
-const assets = ['d4nt3', 'zombie', 'trees'];
+const assets = ['d4nt3', 'zombie', 'tree1', 'tree2', 'tree3', 'tree4', 'tree5'];
 
 export let scene, camera, light, shadowGenerator, ground, text1, text2;
 export const library = {};
@@ -27,18 +26,23 @@ function createScene() {
     scene.checkCollisions = true;
 
     light = new BABYLON.PointLight('light', new BABYLON.Vector3(0, 10, 0), scene);
-    light.intensity = 1;
+    light.intensity = 0.8;
+    light.range = 50;
+
+    const moon = new BABYLON.DirectionalLight('DirectionalLight', new BABYLON.Vector3(-1, -1, -1), scene);
+    moon.intensity = 0.3;
 
     camera = new BABYLON.ArcRotateCamera('Camera', 1, 0.8, 80, new BABYLON.Vector3(0, 0, 0), scene);
 
-    shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
+    shadowGenerator = new BABYLON.ShadowGenerator(512, light);
     shadowGenerator.usePercentageCloserFiltering = true;
+    shadowGenerator.filteringQuality = BABYLON.ShadowGenerator.QUALITY_LOW;
 
     state.gui = BABYLON_GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
     ground = BABYLON.Mesh.CreateGround('ground', 1000, 1000, 0, scene);
     ground.material = new BABYLON.StandardMaterial('groundmat', scene);
-    ground.material.diffuseTexture = new BABYLON.Texture('assets/img/tiles.jpg', scene);
+    ground.material.diffuseTexture = new BABYLON.Texture('assets/img/earth.jpg', scene);
     ground.material.diffuseTexture.uScale = 20;
     ground.material.diffuseTexture.vScale = 20;
     ground.material.specularColor = BABYLON.Color3.Black();
@@ -78,11 +82,10 @@ function initGame() {
         createEnemy(library['zombie'], state.heroId);
     }
 
-    // const trees = new Entity();
-    // trees.addComponent(new Coordinates());
-    // trees.components['coordinates'].position.x = Math.random() * 100 - 50;
-    // trees.components['coordinates'].position.z = Math.random() * 100 - 50;
-    // trees.addComponent(new Appearance(trees.components['coordinates'].position, false, library['trees'], true));
+    for (let i = 0; i < 20; i++) {
+        const n = Math.ceil(Math.random() * 5);
+        createTree(library[`tree${n}`]);
+    }
 
     state.pauseScreen = new BABYLON_GUI.TextBlock();
     state.pauseScreen.text = 'PAUSE';
