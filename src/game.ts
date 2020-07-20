@@ -1,5 +1,5 @@
 export const state = {
-    CPS: 30,
+    CPS: 60,
     pause: false,
     pauseScreen: null,
     setPause: () => {

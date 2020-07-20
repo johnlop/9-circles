@@ -34,7 +34,6 @@ export class Skill {
                 position.y = 1;
 
                 const ray = new BABYLON.Ray(position, direction, this.range);
-
                 const rayHelper = new BABYLON.RayHelper(ray);
                 rayHelper.show(scene);
 
@@ -52,7 +51,9 @@ export class Skill {
                         if (state.cpts['vitals'][id].life <= 0) {
                             removeEntity(id);
                         } else {
-                            state.cpts['appearance'][id].label.text = state.cpts['vitals'][id].life.toString();
+                            if (state.cpts['appearance'][id].label) {
+                                state.cpts['appearance'][id].label.text = state.cpts['vitals'][id].life.toString();
+                            }
                         }
                     }
                 }

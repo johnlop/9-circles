@@ -23,7 +23,8 @@ export const library = {};
 
 function createScene() {
     scene = new BABYLON.Scene(engine);
-    scene.clearColor = new BABYLON.Color4(1, 1, 1, 1);
+    scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
+    BABYLON.SceneOptimizer.OptimizeAsync(scene);
 
     light = new BABYLON.PointLight('light', new BABYLON.Vector3(0, 10, 0), scene);
     light.intensity = 0.8;
@@ -79,10 +80,10 @@ function initGame() {
         createEnemy(library['zombie'], state.heroId);
     }
 
-    // for (let i = 0; i < 20; i++) {
-    //     const n = Math.ceil(Math.random() * 5);
-    //     createTree(library[`tree${n}`]);
-    // }
+    for (let i = 0; i < 10; i++) {
+        const n = Math.ceil(Math.random() * 5);
+        createTree(library[`tree${n}`]);
+    }
 
     state.pauseScreen = new BABYLON_GUI.TextBlock();
     state.pauseScreen.text = 'PAUSE';
