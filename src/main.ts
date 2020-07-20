@@ -17,13 +17,13 @@ const engine = new BABYLON.Engine(canvas, true);
 const systems = [move];
 const assets = ['d4nt3', 'zombie', 'tree1', 'tree2', 'tree3', 'tree4', 'tree5'];
 
-export let scene, camera, light, shadowGenerator, ground, text1, text2;
+export let camera, light, shadowGenerator, ground, text1, text2;
+export let scene;
 export const library = {};
 
 function createScene() {
     scene = new BABYLON.Scene(engine);
-    scene.clearColor = new BABYLON.Color3(1, 1, 1);
-    scene.checkCollisions = true;
+    scene.clearColor = new BABYLON.Color4(1, 1, 1, 1);
 
     light = new BABYLON.PointLight('light', new BABYLON.Vector3(0, 10, 0), scene);
     light.intensity = 0.8;
@@ -42,7 +42,7 @@ function createScene() {
 
     ground = BABYLON.Mesh.CreateGround('ground', 1000, 1000, 0, scene);
     ground.material = new BABYLON.StandardMaterial('groundmat', scene);
-    ground.material.diffuseTexture = new BABYLON.Texture('assets/img/earth.jpg', scene);
+    ground.material.diffuseTexture = new BABYLON.Texture('assets/img/tiles.jpg', scene);
     ground.material.diffuseTexture.uScale = 20;
     ground.material.diffuseTexture.vScale = 20;
     ground.material.specularColor = BABYLON.Color3.Black();
@@ -54,7 +54,7 @@ function createScene() {
 function loadAssets() {
     const assetsManager = new BABYLON.AssetsManager(scene);
     assets.forEach((asset) => {
-        const task = assetsManager.addMeshTask(asset, '', './assets/', `${asset}.glb`);
+        const task = assetsManager.addMeshTask(asset, '', './assets/models/', `${asset}.glb`);
         task.onSuccess = function (t) {
             t.loadedMeshes[0].setEnabled(false);
             library[asset] = t.loadedMeshes[0];
@@ -70,10 +70,7 @@ function loadAssets() {
 }
 
 function initGame() {
-    state.cpts['appearance'] = {};
-    state.cpts['vitals'] = {};
-    state.cpts['coordinates'] = {};
-    state.cpts['target'] = {};
+    state.cpts = { appearance: {}, vitals: {}, coordinates: {}, target: {} };
 
     state.heroId = createHero(library['d4nt3']);
     camera.lockedTarget = state.cpts['appearance'][state.heroId].mesh;
@@ -82,10 +79,10 @@ function initGame() {
         createEnemy(library['zombie'], state.heroId);
     }
 
-    for (let i = 0; i < 20; i++) {
-        const n = Math.ceil(Math.random() * 5);
-        createTree(library[`tree${n}`]);
-    }
+    // for (let i = 0; i < 20; i++) {
+    //     const n = Math.ceil(Math.random() * 5);
+    //     createTree(library[`tree${n}`]);
+    // }
 
     state.pauseScreen = new BABYLON_GUI.TextBlock();
     state.pauseScreen.text = 'PAUSE';

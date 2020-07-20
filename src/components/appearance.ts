@@ -7,12 +7,13 @@ export class Appearance {
     public mesh: BABYLON.Mesh;
     public label: BABYLON.GUI.TextBlock;
 
-    public constructor(position, hasLabel = false, mesh = null, hasShadow = true) {
+    public constructor(id, position, hasLabel = false, mesh = null, hasShadow = true) {
         if (mesh) {
             this.mesh = mesh.clone();
         } else {
             this.mesh = BABYLON.MeshBuilder.CreateSphere('', { diameter: 1 }, scene);
         }
+        this.mesh.name = id;
 
         this.mesh.material = new BABYLON.StandardMaterial('selectcolor', scene);
         this.mesh.position = position;
@@ -29,6 +30,7 @@ export class Appearance {
 
         if (hasShadow) {
             shadowGenerator.addShadowCaster(this.mesh);
+            this.mesh.isPickable = false;
         }
 
         return this;

@@ -1,7 +1,8 @@
-import { addComponent, createEntity } from '../entities/entity';
+import { addComponent, createEntity, removeEntity } from '../entities/entity';
 import { Appearance } from '../components/appearance';
 import { Coordinates } from '../components/coordinates';
 import { state } from '../game';
+import { scene } from '../main';
 
 export class Skill {
     public key: string;
@@ -28,17 +29,35 @@ export class Skill {
         const now = Date.now();
         if (now - this.skillLastUsed > this.rateOfFire) {
             if (this.isProjectile) {
-                const id = createEntity();
                 const position = state.cpts['coordinates'][userId].position.clone();
-                addComponent(
-                    new Coordinates(
-                        position,
-                        targetPosition.subtract(state.cpts['coordinates'][userId].position),
-                        this.speed,
-                    ),
-                    id,
-                );
-                addComponent(new Appearance(position, false), id);
+                const direction = BABYLON.Vector3.Normalize(targetPosition.subtract(position));
+                position.y = 1;
+
+                const ray = new BABYLON.Ray(position, direction, this.range);
+
+                const rayHelper = new BABYLON.RayHelper(ray);
+                rayHelper.show(scene);
+
+                const hit = scene.pickWithRay(ray, (mesh) => {
+                    if (mesh.name === state.heroId || (mesh.parent && mesh.parent.name === state.heroId)) {
+                        return false;
+                    }
+                    return true;
+                });
+
+                if (hit.pickedMesh) {
+                    const id = hit.pickedMesh.parent ? hit.pickedMesh.parent.name : hit.pickedMesh.name;
+                    if (state.cpts['vitals'][id]) {
+                        state.cpts['vitals'][id].life -= this.damage;
+                        if (state.cpts['vitals'][id].life <= 0) {
+                            removeEntity(id);
+                        } else {
+                            state.cpts['appearance'][id].label.text = state.cpts['vitals'][id].life.toString();
+                        }
+                    }
+                }
+
+                rayHelper.dispose();
             }
             this.skillLastUsed = now;
         }

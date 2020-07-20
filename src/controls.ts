@@ -1,5 +1,5 @@
 import { state } from './game';
-import { camera } from './main';
+import { camera, scene } from './main';
 
 export function keyHandler(): void {
     if (map['ArrowDown'] || map['KeyS']) {
@@ -28,9 +28,13 @@ export function keyHandler(): void {
 const map = {};
 onkeydown = function (e) {
     map[e.code] = true;
-    // Pause
     if (e.code === 'KeyP') {
         state.setPause();
+    }
+    if (e.code === 'KeyL') {
+        scene.meshes.forEach((mesh) => {
+            console.log(`${mesh.name} -> ${mesh.parent && mesh.parent.name}`);
+        });
     }
     e.stopPropagation();
 };
