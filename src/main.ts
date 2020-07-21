@@ -7,6 +7,7 @@ import { move } from './systems/move';
 import { createHero } from './classes/hero';
 import { state } from './game';
 import { createTree } from './classes/tree';
+import { createMap } from './map';
 
 // Get the canvas element from the HTML
 const canvas = document.querySelector('#renderCanvas') as HTMLCanvasElement;
@@ -16,6 +17,9 @@ const engine = new BABYLON.Engine(canvas, true);
 
 const systems = [move];
 const assets = ['d4nt3', 'zombie', 'tree1', 'tree2', 'tree3', 'tree4', 'tree5'];
+const MAP_SIZE = 20;
+const GRID_SIZE = 20;
+const PATH_LENGTH = 100;
 
 export let camera, light, shadowGenerator, ground, text1, text2, pauseScreen, gui;
 export let scene;
@@ -24,7 +28,6 @@ export const library = {};
 function createScene() {
     scene = new BABYLON.Scene(engine);
     scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
-    // BABYLON.SceneOptimizer.OptimizeAsync(scene);
 
     light = new BABYLON.PointLight('light', new BABYLON.Vector3(0, 16, 0), scene);
     light.intensity = 1;
@@ -41,7 +44,12 @@ function createScene() {
 
     gui = BABYLON_GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
-    ground = BABYLON.Mesh.CreateGround('ground', 1000, 1000, 0, scene);
+    const map = createMap(MAP_SIZE, GRID_SIZE, PATH_LENGTH);
+    ground = BABYLON.MeshBuilder.CreateGround(
+        'ground',
+        { width: MAP_SIZE * GRID_SIZE, height: MAP_SIZE * GRID_SIZE, subdivisions: 1 },
+        scene,
+    );
     ground.material = new BABYLON.StandardMaterial('groundmat', scene);
     ground.material.diffuseTexture = new BABYLON.Texture('assets/img/tiles.jpg', scene);
     ground.material.diffuseTexture.uScale = 20;
@@ -76,14 +84,14 @@ function initGame() {
     state.heroId = createHero(library['d4nt3']);
     camera.lockedTarget = state.cpts['appearance'][state.heroId].mesh;
 
-    for (let i = 0; i < 2; i++) {
-        createEnemy(library['zombie'], state.heroId);
-    }
+    // for (let i = 0; i < 2; i++) {
+    //     createEnemy(library['zombie'], state.heroId);
+    // }
 
-    for (let i = 0; i < 10; i++) {
-        const n = Math.ceil(Math.random() * 5);
-        createTree(library[`tree${n}`]);
-    }
+    // for (let i = 0; i < 10; i++) {
+    //     const n = Math.ceil(Math.random() * 5);
+    //     createTree(library[`tree${n}`]);
+    // }
 
     pauseScreen = new BABYLON_GUI.TextBlock();
     pauseScreen.text = 'PAUSE';

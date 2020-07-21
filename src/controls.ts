@@ -36,6 +36,9 @@ onkeydown = function (e) {
             console.log(`${mesh.name} -> ${mesh.parent && mesh.parent.name}`);
         });
     }
+    if (e.code === 'KeyO') {
+        console.log(state.cpts['coordinates'][state.heroId].position);
+    }
     e.stopPropagation();
 };
 onkeyup = function (e) {
