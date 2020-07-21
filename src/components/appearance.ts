@@ -1,5 +1,5 @@
 import { state } from '../game';
-import { scene, shadowGenerator } from '../main';
+import { scene, shadowGenerator, gui } from '../main';
 
 // Appearance
 export class Appearance {
@@ -23,7 +23,7 @@ export class Appearance {
             this.label.text = '100';
             this.label.fontSize = 30;
             this.label.color = 'white';
-            state.gui.addControl(this.label);
+            gui.addControl(this.label);
             this.label.linkWithMesh(this.mesh);
             this.label.linkOffsetY = -100;
         }

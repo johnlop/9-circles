@@ -17,21 +17,21 @@ const engine = new BABYLON.Engine(canvas, true);
 const systems = [move];
 const assets = ['d4nt3', 'zombie', 'tree1', 'tree2', 'tree3', 'tree4', 'tree5'];
 
-export let camera, light, shadowGenerator, ground, text1, text2;
+export let camera, light, shadowGenerator, ground, text1, text2, pauseScreen, gui;
 export let scene;
 export const library = {};
 
 function createScene() {
     scene = new BABYLON.Scene(engine);
     scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
-    BABYLON.SceneOptimizer.OptimizeAsync(scene);
+    // BABYLON.SceneOptimizer.OptimizeAsync(scene);
 
-    light = new BABYLON.PointLight('light', new BABYLON.Vector3(0, 10, 0), scene);
-    light.intensity = 0.8;
+    light = new BABYLON.PointLight('light', new BABYLON.Vector3(0, 16, 0), scene);
+    light.intensity = 1;
     light.range = 50;
 
     const moon = new BABYLON.DirectionalLight('DirectionalLight', new BABYLON.Vector3(-1, -1, -1), scene);
-    moon.intensity = 0.3;
+    moon.intensity = 0.2;
 
     camera = new BABYLON.ArcRotateCamera('Camera', 1, 0.8, 80, new BABYLON.Vector3(0, 0, 0), scene);
 
@@ -39,7 +39,7 @@ function createScene() {
     shadowGenerator.usePercentageCloserFiltering = true;
     shadowGenerator.filteringQuality = BABYLON.ShadowGenerator.QUALITY_LOW;
 
-    state.gui = BABYLON_GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
+    gui = BABYLON_GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
     ground = BABYLON.Mesh.CreateGround('ground', 1000, 1000, 0, scene);
     ground.material = new BABYLON.StandardMaterial('groundmat', scene);
@@ -85,12 +85,12 @@ function initGame() {
         createTree(library[`tree${n}`]);
     }
 
-    state.pauseScreen = new BABYLON_GUI.TextBlock();
-    state.pauseScreen.text = 'PAUSE';
-    state.pauseScreen.color = 'white';
-    state.pauseScreen.fontSize = 100;
-    state.pauseScreen.isVisible = false;
-    state.gui.addControl(state.pauseScreen);
+    pauseScreen = new BABYLON_GUI.TextBlock();
+    pauseScreen.text = 'PAUSE';
+    pauseScreen.color = 'white';
+    pauseScreen.fontSize = 100;
+    pauseScreen.isVisible = false;
+    gui.addControl(pauseScreen);
 
     text1 = new BABYLON_GUI.TextBlock();
     text1.text = 'xp: ';
@@ -100,7 +100,7 @@ function initGame() {
     text1.fontSize = 16;
     text1.paddingBottom = '5px';
     text1.paddingLeft = '5px';
-    state.gui.addControl(text1);
+    gui.addControl(text1);
 
     text2 = new BABYLON_GUI.TextBlock();
     text2.color = 'white';
@@ -109,7 +109,7 @@ function initGame() {
     text2.fontSize = 16;
     text2.paddingTop = '5px';
     text2.paddingRight = '5px';
-    state.gui.addControl(text2);
+    gui.addControl(text2);
 
     setInterval(systemLoop, 1000 / state.CPS);
 }

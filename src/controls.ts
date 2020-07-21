@@ -3,21 +3,21 @@ import { camera, scene } from './main';
 
 export function keyHandler(): void {
     if (map['ArrowDown'] || map['KeyS']) {
-        state.cpts['appearance'][state.heroId].mesh.translate(BABYLON.Axis.Z, 20 / state.CPS, BABYLON.Space.LOCAL);
+        state.cpts['appearance'][state.heroId].mesh.translate(BABYLON.Axis.Z, 30 / state.CPS, BABYLON.Space.LOCAL);
         state.cpts['coordinates'][state.heroId].position = state.cpts['appearance'][state.heroId].mesh.position;
     } else if (map['ArrowUp'] || map['KeyW']) {
         state.cpts['appearance'][state.heroId].mesh.translate(
             BABYLON.Axis.Z,
-            map['ShiftLeft'] ? -30 / state.CPS : -20 / state.CPS,
+            map['ShiftLeft'] ? -50 / state.CPS : -30 / state.CPS,
             BABYLON.Space.LOCAL,
         );
         state.cpts['coordinates'][state.heroId].position = state.cpts['appearance'][state.heroId].mesh.position;
     }
     if (map['ArrowRight'] || map['KeyD']) {
-        state.cpts['appearance'][state.heroId].mesh.translate(BABYLON.Axis.X, 10 / state.CPS, BABYLON.Space.LOCAL);
+        state.cpts['appearance'][state.heroId].mesh.translate(BABYLON.Axis.X, 20 / state.CPS, BABYLON.Space.LOCAL);
         state.cpts['coordinates'][state.heroId].position = state.cpts['appearance'][state.heroId].mesh.position;
     } else if (map['ArrowLeft'] || map['KeyA']) {
-        state.cpts['appearance'][state.heroId].mesh.translate(BABYLON.Axis.X, -10 / state.CPS, BABYLON.Space.LOCAL);
+        state.cpts['appearance'][state.heroId].mesh.translate(BABYLON.Axis.X, -20 / state.CPS, BABYLON.Space.LOCAL);
         state.cpts['coordinates'][state.heroId].position = state.cpts['appearance'][state.heroId].mesh.position;
     }
     state.skills.forEach((skill) => {
