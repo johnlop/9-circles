@@ -18,7 +18,7 @@ const engine = new BABYLON.Engine(canvas, true);
 const systems = [move];
 const assets = ['d4nt3', 'zombie', 'tree1', 'tree2', 'tree3', 'tree4', 'tree5'];
 const MAP_SIZE = 12;
-const GRID_SIZE = 30;
+const GRID_SIZE = 40;
 const PATH_LENGTH = 100;
 const WALL_HEIGH = 20;
 export const CPS = 30;
@@ -75,7 +75,7 @@ function loadAssets() {
 function initGame() {
     state.cpts = { appearance: {}, vitals: {}, coordinates: {}, target: {} };
 
-    state.heroId = createHero(library['d4nt3']);
+    state.heroId = createHero(library['d4nt3'], new BABYLON.Vector3(GRID_SIZE / 2, 0, GRID_SIZE / 2));
     camera.lockedTarget = state.cpts['appearance'][state.heroId].mesh;
 
     // for (let i = 0; i < 2; i++) {

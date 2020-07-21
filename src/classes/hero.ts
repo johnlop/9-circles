@@ -5,9 +5,8 @@ import { Vitals } from '../components/vitals';
 import { Skill } from './skill';
 import { state } from '../game';
 
-export const createHero = function (mesh) {
+export const createHero = function (mesh, position) {
     const id = createEntity();
-    const position = new BABYLON.Vector3(15, 0, 15);
     addComponent(new Coordinates(position, BABYLON.Vector3.Zero, 0), id);
     addComponent(new Appearance(id, position, false, mesh, false), id);
     addComponent(new Vitals(100), id);
