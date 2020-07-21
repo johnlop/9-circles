@@ -8,6 +8,7 @@ import { createHero } from './classes/hero';
 import { state } from './game';
 import { createTree } from './classes/tree';
 import { createMap } from './map';
+import { expire } from './systems/expire';
 
 // Get the canvas element from the HTML
 const canvas = document.querySelector('#renderCanvas') as HTMLCanvasElement;
@@ -15,7 +16,7 @@ const canvas = document.querySelector('#renderCanvas') as HTMLCanvasElement;
 // Load the BABYLON 3D engine
 const engine = new BABYLON.Engine(canvas, true);
 
-const systems = [move];
+const systems = [move, expire];
 const assets = ['d4nt3', 'zombie', 'tree1', 'tree2', 'tree3', 'tree4', 'tree5'];
 const MAP_SIZE = 12;
 const GRID_SIZE = 40;
@@ -36,8 +37,8 @@ function createScene() {
     light.intensity = 1;
     light.range = 50;
 
-    const moon = new BABYLON.DirectionalLight('DirectionalLight', new BABYLON.Vector3(-1, -1, -1), scene);
-    moon.intensity = 0.2;
+    // const moon = new BABYLON.DirectionalLight('DirectionalLight', new BABYLON.Vector3(-1, -1, -1), scene);
+    // moon.intensity = 0.2;
 
     camera = new BABYLON.ArcRotateCamera('Camera', 1, 0.8, 80, new BABYLON.Vector3(0, 0, 0), scene);
 
@@ -73,18 +74,18 @@ function loadAssets() {
 }
 
 function initGame() {
-    state.cpts = { appearance: {}, vitals: {}, coordinates: {}, target: {} };
+    state.cpts = { appearance: {}, vitals: {}, coordinates: {}, target: {}, movement: {}, expiration: {} };
 
-    state.heroId = createHero(library['d4nt3'], new BABYLON.Vector3(GRID_SIZE / 2, 0, GRID_SIZE / 2));
+    state.heroId = createHero(new BABYLON.Vector3(GRID_SIZE / 2, 0, GRID_SIZE / 2));
     camera.lockedTarget = state.cpts['appearance'][state.heroId].mesh;
 
     // for (let i = 0; i < 2; i++) {
-    //     createEnemy(library['zombie'], state.heroId);
+    //     createEnemy('zombie', state.heroId);
     // }
 
     // for (let i = 0; i < 10; i++) {
     //     const n = Math.ceil(Math.random() * 5);
-    //     createTree(library[`tree${n}`]);
+    //     createTree(`tree${n}`);
     // }
 
     pauseScreen = new BABYLON_GUI.TextBlock();
@@ -134,9 +135,9 @@ function systemLoop() {
             light.position.z = state.cpts['coordinates'][state.heroId].position.z;
         }
 
-        // for (const i in systems) {
-        //     systems[i]();
-        // }
+        for (const i in systems) {
+            systems[i]();
+        }
 
         keyHandler();
 

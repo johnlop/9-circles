@@ -5,7 +5,7 @@ import { CPS } from '../main';
 export function move() {
     let coordinates, targetCoordinates, dir;
 
-    for (const id in state.cpts['coordinates']) {
+    for (const id in state.cpts['movement']) {
         coordinates = state.cpts['coordinates'][id];
 
         if (state.cpts['target'][id]) {

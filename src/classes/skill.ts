@@ -1,8 +1,8 @@
-import { addComponent, createEntity, removeEntity } from '../entities/entity';
-import { Appearance } from '../components/appearance';
-import { Coordinates } from '../components/coordinates';
+import { removeEntity, addComponent, createEntity } from '../entities/entity';
 import { state } from '../game';
 import { scene } from '../main';
+import { Appearance } from '../components/appearance';
+import { Expiration } from '../components/expiration';
 
 export class Skill {
     public key: string;
@@ -34,8 +34,6 @@ export class Skill {
                 position.y = 1;
 
                 const ray = new BABYLON.Ray(position, direction, this.range);
-                const rayHelper = new BABYLON.RayHelper(ray);
-                rayHelper.show(scene);
 
                 const hit = scene.pickWithRay(ray, (mesh) => {
                     if (mesh.name === state.heroId || (mesh.parent && mesh.parent.name === state.heroId)) {
@@ -58,7 +56,11 @@ export class Skill {
                     }
                 }
 
-                rayHelper.dispose();
+                const id = createEntity();
+                addComponent(new Appearance(id, position, false, 'laser', false), id);
+                (state.cpts['appearance'][id].mesh as BABYLON.Mesh).lookAt(targetPosition);
+                const exp = Date.now() + 500;
+                addComponent(new Expiration(exp), id);
             }
             this.skillLastUsed = now;
         }
