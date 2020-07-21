@@ -1,25 +1,27 @@
 import { state } from './game';
-import { camera, scene } from './main';
+import { camera, scene, CPS } from './main';
+import { Appearance } from './components/appearance';
+import { Coordinates } from './components/coordinates';
 
 export function keyHandler(): void {
-    if (map['ArrowDown'] || map['KeyS']) {
-        state.cpts['appearance'][state.heroId].mesh.translate(BABYLON.Axis.Z, 30 / state.CPS, BABYLON.Space.LOCAL);
-        state.cpts['coordinates'][state.heroId].position = state.cpts['appearance'][state.heroId].mesh.position;
-    } else if (map['ArrowUp'] || map['KeyW']) {
-        state.cpts['appearance'][state.heroId].mesh.translate(
-            BABYLON.Axis.Z,
-            map['ShiftLeft'] ? -50 / state.CPS : -30 / state.CPS,
-            BABYLON.Space.LOCAL,
-        );
-        state.cpts['coordinates'][state.heroId].position = state.cpts['appearance'][state.heroId].mesh.position;
+    const appearance = state.cpts['appearance'][state.heroId] as Appearance;
+    const coordinates = state.cpts['coordinates'][state.heroId] as Coordinates;
+    const direction = coordinates.look.subtract(coordinates.position).normalize();
+
+    if (map['ArrowUp'] || map['KeyW']) {
+        appearance.mesh.moveWithCollisions(direction.scale(30 / CPS));
+    } else if (map['ArrowDown'] || map['KeyS']) {
+        appearance.mesh.moveWithCollisions(direction.scale(-30 / CPS));
     }
     if (map['ArrowRight'] || map['KeyD']) {
-        state.cpts['appearance'][state.heroId].mesh.translate(BABYLON.Axis.X, 20 / state.CPS, BABYLON.Space.LOCAL);
-        state.cpts['coordinates'][state.heroId].position = state.cpts['appearance'][state.heroId].mesh.position;
+        const dir = new BABYLON.Vector3(direction.z, direction.y, -direction.x);
+        appearance.mesh.moveWithCollisions(dir.scale(30 / CPS));
     } else if (map['ArrowLeft'] || map['KeyA']) {
-        state.cpts['appearance'][state.heroId].mesh.translate(BABYLON.Axis.X, -20 / state.CPS, BABYLON.Space.LOCAL);
-        state.cpts['coordinates'][state.heroId].position = state.cpts['appearance'][state.heroId].mesh.position;
+        const dir = new BABYLON.Vector3(-direction.z, direction.y, direction.x);
+        appearance.mesh.moveWithCollisions(dir.scale(30 / CPS));
     }
+    coordinates.position = appearance.mesh.position;
+
     state.skills.forEach((skill) => {
         if (map[skill.key]) skill.use(state.heroId, state.pointer);
     });

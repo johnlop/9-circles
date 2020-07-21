@@ -17,9 +17,11 @@ const engine = new BABYLON.Engine(canvas, true);
 
 const systems = [move];
 const assets = ['d4nt3', 'zombie', 'tree1', 'tree2', 'tree3', 'tree4', 'tree5'];
-const MAP_SIZE = 20;
-const GRID_SIZE = 20;
+const MAP_SIZE = 12;
+const GRID_SIZE = 30;
 const PATH_LENGTH = 100;
+const WALL_HEIGH = 20;
+export const CPS = 30;
 
 export let camera, light, shadowGenerator, ground, text1, text2, pauseScreen, gui;
 export let scene;
@@ -28,6 +30,7 @@ export const library = {};
 function createScene() {
     scene = new BABYLON.Scene(engine);
     scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
+    scene.collisionsEnabled = true;
 
     light = new BABYLON.PointLight('light', new BABYLON.Vector3(0, 16, 0), scene);
     light.intensity = 1;
@@ -44,21 +47,12 @@ function createScene() {
 
     gui = BABYLON_GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
-    const map = createMap(MAP_SIZE, GRID_SIZE, PATH_LENGTH);
-    ground = BABYLON.MeshBuilder.CreateGround(
-        'ground',
-        { width: MAP_SIZE * GRID_SIZE, height: MAP_SIZE * GRID_SIZE, subdivisions: 1 },
-        scene,
-    );
-    ground.material = new BABYLON.StandardMaterial('groundmat', scene);
-    ground.material.diffuseTexture = new BABYLON.Texture('assets/img/tiles.jpg', scene);
-    ground.material.diffuseTexture.uScale = 20;
-    ground.material.diffuseTexture.vScale = 20;
-    ground.material.specularColor = BABYLON.Color3.Black();
-    ground.receiveShadows = true;
+    createMap(MAP_SIZE, GRID_SIZE, WALL_HEIGH, PATH_LENGTH);
 
     loadAssets();
 }
+
+createScene();
 
 function loadAssets() {
     const assetsManager = new BABYLON.AssetsManager(scene);
@@ -119,32 +113,30 @@ function initGame() {
     text2.paddingRight = '5px';
     gui.addControl(text2);
 
-    setInterval(systemLoop, 1000 / state.CPS);
+    setInterval(systemLoop, 1000 / CPS);
+    // Register a render loop to repeatedly render the state.scene
+    engine.runRenderLoop(function () {
+        const pickResult = scene.pick(scene.pointerX, scene.pointerY);
+        if (pickResult.hit) {
+            state.pointer = pickResult.pickedPoint;
+            state.pointer.y = 0;
+        }
+        scene.render();
+    });
 }
-
-createScene();
-
-// Register a render loop to repeatedly render the state.scene
-engine.runRenderLoop(function () {
-    const pickResult = scene.pick(scene.pointerX, scene.pointerY);
-    if (pickResult.hit) {
-        state.pointer = pickResult.pickedPoint;
-        state.pointer.y = 0;
-    }
-    scene.render();
-});
 
 function systemLoop() {
     if (!state.pause) {
         if (state.pointer) {
             state.cpts['coordinates'][state.heroId].look = state.pointer;
+            state.cpts['appearance'][state.heroId].mesh.lookAt(state.pointer);
             light.position.x = state.cpts['coordinates'][state.heroId].position.x;
             light.position.z = state.cpts['coordinates'][state.heroId].position.z;
         }
 
-        for (const i in systems) {
-            systems[i]();
-        }
+        // for (const i in systems) {
+        //     systems[i]();
+        // }
 
         keyHandler();
 

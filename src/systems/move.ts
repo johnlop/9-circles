@@ -1,5 +1,6 @@
 import { state } from '../game';
-import { removeComponent, removeEntity } from '../entities/entity';
+import { removeEntity } from '../entities/entity';
+import { CPS } from '../main';
 
 export function move() {
     let coordinates, targetCoordinates, dir;
@@ -18,7 +19,7 @@ export function move() {
         }
 
         if (coordinates.direction) {
-            dir = coordinates.direction.normalize().scaleInPlace(coordinates.speed / state.CPS);
+            dir = coordinates.direction.normalize().scaleInPlace(coordinates.speed / CPS);
             state.cpts['appearance'][id].mesh.moveWithCollisions(dir);
         }
 

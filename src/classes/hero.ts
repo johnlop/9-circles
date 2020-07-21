@@ -7,8 +7,8 @@ import { state } from '../game';
 
 export const createHero = function (mesh) {
     const id = createEntity();
-    const position = BABYLON.Vector3.Zero();
-    addComponent(new Coordinates(position, BABYLON.Vector3.Zero(), 0), id);
+    const position = new BABYLON.Vector3(15, 0, 15);
+    addComponent(new Coordinates(position, BABYLON.Vector3.Zero, 0), id);
     addComponent(new Appearance(id, position, false, mesh, false), id);
     addComponent(new Vitals(100), id);
     state.skills.push(new Skill('Space', true, 50, 1, 10, 50, 100));

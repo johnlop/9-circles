@@ -1,7 +1,6 @@
 import { pauseScreen } from './main';
 
 export const state = {
-    CPS: 60,
     pause: false,
     setPause: () => {
         state.pause = !state.pause;

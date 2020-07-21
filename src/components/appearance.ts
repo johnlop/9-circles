@@ -17,6 +17,7 @@ export class Appearance {
 
         this.mesh.material = new BABYLON.StandardMaterial('selectcolor', scene);
         this.mesh.position = position;
+        this.mesh.checkCollisions = true;
 
         if (hasLabel) {
             this.label = new BABYLON.GUI.TextBlock();
