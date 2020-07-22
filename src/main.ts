@@ -79,9 +79,9 @@ function initGame() {
     state.heroId = createHero(new BABYLON.Vector3(GRID_SIZE / 2, 0, GRID_SIZE / 2));
     camera.lockedTarget = state.cpts['appearance'][state.heroId].mesh;
 
-    // for (let i = 0; i < 2; i++) {
-    //     createEnemy('zombie', state.heroId);
-    // }
+    for (let i = 0; i < 2; i++) {
+        createEnemy('zombie', state.heroId);
+    }
 
     // for (let i = 0; i < 10; i++) {
     //     const n = Math.ceil(Math.random() * 5);

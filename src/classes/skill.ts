@@ -29,9 +29,10 @@ export class Skill {
         const now = Date.now();
         if (now - this.skillLastUsed > this.rateOfFire) {
             if (this.isProjectile) {
-                const position = state.cpts['coordinates'][userId].position.clone();
-                const direction = BABYLON.Vector3.Normalize(targetPosition.subtract(position));
+                targetPosition.y = 1;
+                const position = (state.cpts['coordinates'][userId].position as BABYLON.Vector3).clone();
                 position.y = 1;
+                const direction = BABYLON.Vector3.Normalize(targetPosition.subtract(position));
 
                 const ray = new BABYLON.Ray(position, direction, this.range);
 
@@ -57,9 +58,10 @@ export class Skill {
                 }
 
                 const id = createEntity();
-                addComponent(new Appearance(id, position, false, 'laser', false), id);
-                (state.cpts['appearance'][id].mesh as BABYLON.Mesh).lookAt(targetPosition);
-                const exp = Date.now() + 500;
+                const newpos = position.addInPlace(direction.scale(50));
+                addComponent(new Appearance(id, newpos, 'laser', { hasLabel: false, hasShadow: false }), id);
+                state.cpts['appearance'][id].mesh.lookAt(targetPosition);
+                const exp = Date.now() + 300;
                 addComponent(new Expiration(exp), id);
             }
             this.skillLastUsed = now;
