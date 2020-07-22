@@ -33,6 +33,7 @@ export class Skill {
                 const position = (state.cpts['coordinates'][userId].position as BABYLON.Vector3).clone();
                 position.y = 1;
                 const direction = BABYLON.Vector3.Normalize(targetPosition.subtract(position));
+                direction.rotateByQuaternionToRef(new BABYLON.Quaternion((Math.random() - 1) / 4, 0, 0, 0), direction);
 
                 const ray = new BABYLON.Ray(position, direction, this.range);
 
@@ -42,6 +43,9 @@ export class Skill {
                     }
                     return true;
                 });
+
+                const rayHelper = new BABYLON.RayHelper(ray);
+                // rayHelper.show(scene);
 
                 if (hit.pickedMesh) {
                     const id = hit.pickedMesh.parent ? hit.pickedMesh.parent.name : hit.pickedMesh.name;
@@ -57,12 +61,20 @@ export class Skill {
                     }
                 }
 
-                const id = createEntity();
-                const newpos = position.addInPlace(direction.scale(50));
-                addComponent(new Appearance(id, newpos, 'laser', { hasLabel: false, hasShadow: false }), id);
-                state.cpts['appearance'][id].mesh.lookAt(targetPosition);
-                const exp = Date.now() + 300;
-                addComponent(new Expiration(exp), id);
+                // const id = createEntity();
+                // const newpos = position.addInPlace(direction.scale(50));
+                // addComponent(new Appearance(id, position, 'laser', { hasLabel: false, hasShadow: false }), id);
+                // (state.cpts['appearance'][id].mesh as BABYLON.Mesh)
+                //     .rotateAround(position, BABYLON.Vector3.Up(), Math.random() / 10)
+                //     .lookAt(targetPosition);
+                // (state.cpts['appearance'][id].mesh as BABYLON.Mesh)
+                //     .lookAt(targetPosition);
+                // const orientation = BABYLON.Vector3.RotationFromAxis(direction, null, null);
+                // (state.cpts['appearance'][id].mesh as BABYLON.Mesh).rotation = direction;
+                // const exp = Date.now() + 300;
+                // addComponent(new Expiration(exp), id);
+
+                const line = BABYLON.MeshBuilder.CreateLines('', { points: [position, targetPosition] });
             }
             this.skillLastUsed = now;
         }

@@ -1,9 +1,14 @@
-import { state } from '../game';
 import { scene, shadowGenerator, gui, library } from '../main';
 
 export interface AppearanceOptions {
     hasLabel: boolean;
     hasShadow: boolean;
+}
+
+export enum Type {
+    HERO = 1,
+    ZOMBIE = 2,
+    LASER = 3,
 }
 
 // Appearance
