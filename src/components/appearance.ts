@@ -1,10 +1,5 @@
 import { scene, shadowGenerator, gui, library } from '../main';
 
-export interface AppearanceOptions {
-    hasLabel: boolean;
-    hasShadow: boolean;
-}
-
 export enum Type {
     HERO = 1,
     ZOMBIE = 2,
@@ -17,12 +12,12 @@ export class Appearance {
     public mesh: BABYLON.Mesh;
     public label: BABYLON.GUI.TextBlock;
 
-    public constructor(id: number, position: BABYLON.Vector3, type: string, options: AppearanceOptions) {
+    public constructor(id: number, position: BABYLON.Vector3, type: string, options: any) {
         if (library[type]) {
             this.mesh = library[type].clone();
             this.mesh.checkCollisions = true;
         } else if (type === 'laser') {
-            this.mesh = BABYLON.MeshBuilder.CreateGround('pl', { width: 0.2, height: 100 }, scene);
+            this.mesh = BABYLON.MeshBuilder.CreateGround('pl', { width: 0.2, height: options.length }, scene);
             const laserMaterial = new BABYLON.StandardMaterial('shader', scene);
             laserMaterial.emissiveColor = new BABYLON.Color3(1, 0, 0);
             laserMaterial.alphaMode = BABYLON.Engine.ALPHA_ADD;

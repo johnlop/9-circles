@@ -25,7 +25,7 @@ export class Skill {
         this.range = range;
     }
 
-    public use(userId, targetPosition) {
+    public use(userId: number, targetPosition: BABYLON.Vector3): void {
         const now = Date.now();
         if (now - this.skillLastUsed > this.rateOfFire) {
             if (this.isProjectile) {
@@ -33,19 +33,20 @@ export class Skill {
                 const position = (state.cpts['coordinates'][userId].position as BABYLON.Vector3).clone();
                 position.y = 1;
                 const direction = BABYLON.Vector3.Normalize(targetPosition.subtract(position));
-                direction.rotateByQuaternionToRef(new BABYLON.Quaternion((Math.random() - 1) / 4, 0, 0, 0), direction);
+                direction.rotateByQuaternionToRef(
+                    BABYLON.Quaternion.FromEulerAngles(0, (Math.random() - 0.5) / 4, 0),
+                    direction,
+                );
+                direction.normalize();
 
                 const ray = new BABYLON.Ray(position, direction, this.range);
 
                 const hit = scene.pickWithRay(ray, (mesh) => {
-                    if (mesh.name === state.heroId || (mesh.parent && mesh.parent.name === state.heroId)) {
+                    if (mesh.name == state.heroId || (mesh.parent && mesh.parent.name == state.heroId)) {
                         return false;
                     }
                     return true;
                 });
-
-                const rayHelper = new BABYLON.RayHelper(ray);
-                // rayHelper.show(scene);
 
                 if (hit.pickedMesh) {
                     const id = hit.pickedMesh.parent ? hit.pickedMesh.parent.name : hit.pickedMesh.name;
@@ -61,20 +62,16 @@ export class Skill {
                     }
                 }
 
-                // const id = createEntity();
-                // const newpos = position.addInPlace(direction.scale(50));
-                // addComponent(new Appearance(id, position, 'laser', { hasLabel: false, hasShadow: false }), id);
-                // (state.cpts['appearance'][id].mesh as BABYLON.Mesh)
-                //     .rotateAround(position, BABYLON.Vector3.Up(), Math.random() / 10)
-                //     .lookAt(targetPosition);
-                // (state.cpts['appearance'][id].mesh as BABYLON.Mesh)
-                //     .lookAt(targetPosition);
-                // const orientation = BABYLON.Vector3.RotationFromAxis(direction, null, null);
-                // (state.cpts['appearance'][id].mesh as BABYLON.Mesh).rotation = direction;
-                // const exp = Date.now() + 300;
-                // addComponent(new Expiration(exp), id);
-
-                const line = BABYLON.MeshBuilder.CreateLines('', { points: [position, targetPosition] });
+                const id = createEntity();
+                const newPosition = position.add(direction.scale(this.range / 2));
+                const newTarget = position.add(direction.scale(this.range));
+                addComponent(
+                    new Appearance(id, newPosition, 'laser', { hasLabel: false, hasShadow: false, length: this.range }),
+                    id,
+                );
+                (state.cpts['appearance'][id].mesh as BABYLON.Mesh).lookAt(newTarget);
+                const exp = Date.now() + 300;
+                addComponent(new Expiration(exp), id);
             }
             this.skillLastUsed = now;
         }
