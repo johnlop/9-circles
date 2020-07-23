@@ -14,14 +14,13 @@ export class Skill {
     public speed: number;
     public range: number;
 
-    public constructor(key, isProjectile, rate, projNumber, damage, speed, range) {
+    public constructor(key, isProjectile, rate, projNumber, damage, range) {
         this.key = key;
         this.isProjectile = isProjectile;
         this.skillLastUsed = Date.now();
         this.rateOfFire = rate;
         this.projNumber = projNumber;
         this.damage = damage;
-        this.speed = speed;
         this.range = range;
     }
 

@@ -18,14 +18,20 @@ export class Appearance {
             this.mesh.checkCollisions = true;
         } else if (type === 'laser') {
             this.mesh = BABYLON.MeshBuilder.CreateGround('pl', { width: 0.2, height: options.length }, scene);
-            const laserMaterial = new BABYLON.StandardMaterial('shader', scene);
-            laserMaterial.emissiveColor = new BABYLON.Color3(1, 0, 0);
-            laserMaterial.alphaMode = BABYLON.Engine.ALPHA_ADD;
-            laserMaterial.alpha = 0.5;
-            laserMaterial.backFaceCulling = false;
-            this.mesh.material = laserMaterial;
+            const mat = new BABYLON.StandardMaterial('shader', scene);
+            mat.emissiveColor = new BABYLON.Color3(1, 0, 0);
+            mat.alphaMode = BABYLON.Engine.ALPHA_ADD;
+            mat.alpha = 0.5;
+            mat.backFaceCulling = false;
+            this.mesh.material = mat;
         } else {
-            this.mesh = BABYLON.MeshBuilder.CreateSphere('', { diameter: 1 }, scene);
+            this.mesh = BABYLON.MeshBuilder.CreateBox('', { size: 5, height: 40 }, scene);
+            this.mesh.checkCollisions = true;
+            const mat = new BABYLON.StandardMaterial('col', scene);
+            mat.diffuseTexture = new BABYLON.Texture('assets/img/paving.jpg', scene);
+            mat.specularColor = BABYLON.Color3.Black();
+            this.mesh.material = mat;
+            this.mesh.receiveShadows = true;
         }
 
         this.mesh.name = id.toString();

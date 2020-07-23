@@ -9,16 +9,16 @@ export function keyHandler(): void {
     const direction = coordinates.look.subtract(coordinates.position).normalize();
 
     if (map['ArrowUp'] || map['KeyW']) {
-        appearance.mesh.moveWithCollisions(direction.scale(30 / CPS));
+        appearance.mesh.moveWithCollisions(direction.scale((map['ShiftLeft'] ? 50 : 30) / CPS));
     } else if (map['ArrowDown'] || map['KeyS']) {
         appearance.mesh.moveWithCollisions(direction.scale(-30 / CPS));
     }
     if (map['ArrowRight'] || map['KeyD']) {
         const dir = new BABYLON.Vector3(direction.z, direction.y, -direction.x);
-        appearance.mesh.moveWithCollisions(dir.scale(30 / CPS));
+        appearance.mesh.moveWithCollisions(dir.scale(20 / CPS));
     } else if (map['ArrowLeft'] || map['KeyA']) {
         const dir = new BABYLON.Vector3(-direction.z, direction.y, direction.x);
-        appearance.mesh.moveWithCollisions(dir.scale(30 / CPS));
+        appearance.mesh.moveWithCollisions(dir.scale(20 / CPS));
     }
     coordinates.position = appearance.mesh.position;
 

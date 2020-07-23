@@ -1,13 +1,10 @@
-import * as BABYLON from 'babylonjs';
 import * as BABYLON_GUI from 'babylonjs-gui';
 import '../assets/babylonjs.loaders';
 import { keyHandler } from './controls';
-import { createEnemy } from './classes/enemy';
-import { move } from './systems/move';
 import { createHero } from './classes/hero';
 import { state } from './game';
-import { createTree } from './classes/tree';
 import { createMap } from './map';
+import { move } from './systems/move';
 import { expire } from './systems/expire';
 
 // Get the canvas element from the HTML
@@ -17,7 +14,7 @@ const canvas = document.querySelector('#renderCanvas') as HTMLCanvasElement;
 const engine = new BABYLON.Engine(canvas, true);
 
 const systems = [move, expire];
-const assets = ['d4nt3', 'zombie', 'tree1', 'tree2', 'tree3', 'tree4', 'tree5'];
+const assets = ['robot', 'zombie', 'tree1', 'tree2', 'tree3', 'tree4', 'tree5'];
 const MAP_SIZE = 12;
 const GRID_SIZE = 40;
 const PATH_LENGTH = 100;
@@ -37,8 +34,8 @@ function createScene() {
     light.intensity = 1;
     light.range = 50;
 
-    // const moon = new BABYLON.DirectionalLight('DirectionalLight', new BABYLON.Vector3(-1, -1, -1), scene);
-    // moon.intensity = 0.2;
+    const moon = new BABYLON.DirectionalLight('DirectionalLight', new BABYLON.Vector3(0, -1, 0), scene);
+    moon.intensity = 0.1;
 
     camera = new BABYLON.ArcRotateCamera('Camera', 1, 0.8, 80, new BABYLON.Vector3(0, 0, 0), scene);
 
@@ -46,9 +43,7 @@ function createScene() {
     shadowGenerator.usePercentageCloserFiltering = true;
     shadowGenerator.filteringQuality = BABYLON.ShadowGenerator.QUALITY_LOW;
 
-    gui = BABYLON_GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
-
-    createMap(MAP_SIZE, GRID_SIZE, WALL_HEIGH, PATH_LENGTH);
+    gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
     loadAssets();
 }
@@ -79,14 +74,7 @@ function initGame() {
     state.heroId = createHero(new BABYLON.Vector3(GRID_SIZE / 2, 0, GRID_SIZE / 2));
     camera.lockedTarget = state.cpts['appearance'][state.heroId].mesh;
 
-    for (let i = 0; i < 2; i++) {
-        createEnemy('zombie', state.heroId);
-    }
-
-    // for (let i = 0; i < 10; i++) {
-    //     const n = Math.ceil(Math.random() * 5);
-    //     createTree(`tree${n}`);
-    // }
+    createMap(MAP_SIZE, GRID_SIZE, WALL_HEIGH, PATH_LENGTH);
 
     pauseScreen = new BABYLON_GUI.TextBlock();
     pauseScreen.text = 'PAUSE';
