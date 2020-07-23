@@ -1,26 +1,29 @@
 import { state } from './game';
-import { camera, scene, CPS } from './main';
+import { camera, scene, TICKS, light } from './main';
 import { Appearance } from './components/appearance';
 import { Coordinates } from './components/coordinates';
 
 export function keyHandler(): void {
     const appearance = state.cpts['appearance'][state.heroId] as Appearance;
     const coordinates = state.cpts['coordinates'][state.heroId] as Coordinates;
-    const direction = coordinates.look.subtract(coordinates.position).normalize();
+    state.cpts['appearance'][state.heroId].mesh.lookAt(state.pointer);
+    const direction = state.pointer.subtract(coordinates.position).normalize();
 
     if (map['ArrowUp'] || map['KeyW']) {
-        appearance.mesh.moveWithCollisions(direction.scale((map['ShiftLeft'] ? 50 : 30) / CPS));
+        appearance.mesh.moveWithCollisions(direction.scale((map['ShiftLeft'] ? 50 : 30) / TICKS));
     } else if (map['ArrowDown'] || map['KeyS']) {
-        appearance.mesh.moveWithCollisions(direction.scale(-30 / CPS));
+        appearance.mesh.moveWithCollisions(direction.scale(-30 / TICKS));
     }
     if (map['ArrowRight'] || map['KeyD']) {
         const dir = new BABYLON.Vector3(direction.z, direction.y, -direction.x);
-        appearance.mesh.moveWithCollisions(dir.scale(20 / CPS));
+        appearance.mesh.moveWithCollisions(dir.scale(20 / TICKS));
     } else if (map['ArrowLeft'] || map['KeyA']) {
         const dir = new BABYLON.Vector3(-direction.z, direction.y, direction.x);
-        appearance.mesh.moveWithCollisions(dir.scale(20 / CPS));
+        appearance.mesh.moveWithCollisions(dir.scale(20 / TICKS));
     }
     coordinates.position = appearance.mesh.position;
+    light.position.x = appearance.mesh.position.x;
+    light.position.z = appearance.mesh.position.z;
 
     state.skills.forEach((skill) => {
         if (map[skill.key]) skill.use(state.heroId, state.pointer);

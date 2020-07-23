@@ -1,6 +1,7 @@
 import { scene, shadowGenerator } from './main';
 import { createEnemy } from './classes/enemy';
-import { createObstacle } from './classes/tree';
+import { createObstacle } from './classes/obstacle';
+import { state } from './game';
 
 export const createMap = (mapSize: number, gridSize: number, wallHeigh: number, pathLength: number) => {
     const map = [];
@@ -77,7 +78,7 @@ export const createMap = (mapSize: number, gridSize: number, wallHeigh: number, 
                         0,
                         gridCenter.z + (Math.random() - 0.5) * gridSize,
                     );
-                    createObstacle('col', position);
+                    createEnemy('zombie', position, state.heroId);
                 }
             }
         }

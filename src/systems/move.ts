@@ -1,31 +1,25 @@
 import { state } from '../game';
-import { removeEntity } from '../entities/entity';
-import { CPS } from '../main';
+import { TICKS } from '../main';
 
-export function move() {
-    let coordinates, targetCoordinates, dir;
+export function move(): void {
+    let coordinates, target, targetCoordinates, appearance, dir, distance;
 
-    for (const id in state.cpts['movement']) {
+    for (const id in state.cpts['target']) {
+        target = state.cpts['target'][id];
         coordinates = state.cpts['coordinates'][id];
+        appearance = state.cpts['appearance'][id];
+        targetCoordinates = state.cpts['coordinates'][target.id];
 
-        if (state.cpts['target'][id]) {
-            targetCoordinates = state.cpts['coordinates'][state.cpts['target'][id].id];
-            coordinates.direction = targetCoordinates.position.subtract(coordinates.position);
-            coordinates.look = targetCoordinates.position;
-        }
+        distance = targetCoordinates.position.subtract(coordinates.position);
 
-        if (coordinates.look) {
-            state.cpts['appearance'][id].mesh.lookAt(coordinates.look);
-        }
+        if (distance.length() < target.range) {
+            appearance.mesh.lookAt(targetCoordinates.position);
 
-        if (coordinates.direction) {
-            dir = coordinates.direction.normalize().scaleInPlace(coordinates.speed / CPS);
-            state.cpts['appearance'][id].mesh.moveWithCollisions(dir);
-        }
-
-        // Remove entities that have gone too far
-        if (BABYLON.Vector3.Distance(coordinates.position, state.cpts['coordinates'][state.heroId].position) > 100) {
-            removeEntity(id);
+            dir = targetCoordinates.position
+                .subtract(coordinates.position)
+                .normalize()
+                .scaleInPlace(target.speed / TICKS);
+            appearance.mesh.moveWithCollisions(dir);
         }
     }
 }

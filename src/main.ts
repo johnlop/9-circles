@@ -19,7 +19,7 @@ const MAP_SIZE = 12;
 const GRID_SIZE = 40;
 const PATH_LENGTH = 100;
 const WALL_HEIGH = 20;
-export const CPS = 30;
+export const TICKS = 30;
 
 export let camera, light, shadowGenerator, ground, text1, text2, pauseScreen, gui;
 export let scene;
@@ -69,7 +69,7 @@ function loadAssets() {
 }
 
 function initGame() {
-    state.cpts = { appearance: {}, vitals: {}, coordinates: {}, target: {}, movement: {}, expiration: {} };
+    state.cpts = { appearance: {}, vitals: {}, coordinates: {}, target: {}, expiration: {} };
 
     state.heroId = createHero(new BABYLON.Vector3(GRID_SIZE / 2, 0, GRID_SIZE / 2));
     camera.lockedTarget = state.cpts['appearance'][state.heroId].mesh;
@@ -102,7 +102,7 @@ function initGame() {
     text2.paddingRight = '5px';
     gui.addControl(text2);
 
-    setInterval(systemLoop, 1000 / CPS);
+    setInterval(systemLoop, 1000 / TICKS);
     // Register a render loop to repeatedly render the state.scene
     engine.runRenderLoop(function () {
         const pickResult = scene.pick(scene.pointerX, scene.pointerY);
@@ -116,13 +116,6 @@ function initGame() {
 
 function systemLoop() {
     if (!state.pause) {
-        if (state.pointer) {
-            state.cpts['coordinates'][state.heroId].look = state.pointer;
-            state.cpts['appearance'][state.heroId].mesh.lookAt(state.pointer);
-            light.position.x = state.cpts['coordinates'][state.heroId].position.x;
-            light.position.z = state.cpts['coordinates'][state.heroId].position.z;
-        }
-
         for (const i in systems) {
             systems[i]();
         }
