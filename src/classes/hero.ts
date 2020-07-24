@@ -10,8 +10,8 @@ export const createHero = function (position: BABYLON.Vector3): number {
     addComponent(new Coordinates(position), id);
     addComponent(new Appearance(id, position, 'robot', { hasLabel: false, hasShadow: false }), id);
     addComponent(new Vitals(100), id);
-    state.skills.push(new Skill('Space', Type.LASER, 50, 10, 100, 50, 1));
-    state.skills.push(new Skill('KeyE', Type.LASER, 1000, 50, 200, 90, 1));
-    state.skills.push(new Skill('KeyQ', Type.LASER, 500, 10, 30, 25, 8));
+    state.skills.push(new Skill('Space', Type.LASER, 600, 20, 100, 50, 1));
+    state.skills.push(new Skill('KeyE', Type.LASER, 60, 100, 200, 90, 1));
+    state.skills.push(new Skill('KeyQ', Type.LASER, 120, 20, 30, 30, 8));
     return id;
 };

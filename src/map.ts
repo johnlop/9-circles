@@ -4,6 +4,8 @@ import { createObstacle } from './classes/obstacle';
 import { state } from './game';
 
 export const createMap = (mapSize: number, gridSize: number, wallHeigh: number, pathLength: number) => {
+    // const ground = BABYLON.MeshBuilder.CreateGround('ground', { width: 100, height: 100 }, scene);
+
     const map = [];
     for (let x = 0; x < mapSize; x++) {
         map[x] = [];

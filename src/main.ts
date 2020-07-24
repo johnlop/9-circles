@@ -1,4 +1,3 @@
-import * as BABYLON_GUI from 'babylonjs-gui';
 import '../assets/babylonjs.loaders';
 import { keyHandler } from './controls';
 import { createHero } from './classes/hero';
@@ -6,6 +5,7 @@ import { state } from './game';
 import { createMap } from './map';
 import { move } from './systems/move';
 import { expire } from './systems/expire';
+import { UI, createUI } from './ui';
 
 // Get the canvas element from the HTML
 const canvas = document.querySelector('#renderCanvas') as HTMLCanvasElement;
@@ -15,13 +15,14 @@ const engine = new BABYLON.Engine(canvas, true);
 
 const systems = [move, expire];
 const assets = ['robot', 'zombie', 'tree1', 'tree2', 'tree3', 'tree4', 'tree5'];
+
 const MAP_SIZE = 12;
 const GRID_SIZE = 40;
 const PATH_LENGTH = 100;
 const WALL_HEIGH = 20;
 export const TICKS = 30;
 
-export let camera, light, shadowGenerator, ground, text1, text2, pauseScreen, gui;
+export let camera, light, shadowGenerator, ground;
 export let scene;
 export const library = {};
 
@@ -42,8 +43,6 @@ function createScene() {
     shadowGenerator = new BABYLON.ShadowGenerator(512, light);
     shadowGenerator.usePercentageCloserFiltering = true;
     shadowGenerator.filteringQuality = BABYLON.ShadowGenerator.QUALITY_LOW;
-
-    gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
     loadAssets();
 }
@@ -76,54 +75,31 @@ function initGame() {
 
     createMap(MAP_SIZE, GRID_SIZE, WALL_HEIGH, PATH_LENGTH);
 
-    pauseScreen = new BABYLON_GUI.TextBlock();
-    pauseScreen.text = 'PAUSE';
-    pauseScreen.color = 'white';
-    pauseScreen.fontSize = 100;
-    pauseScreen.isVisible = false;
-    gui.addControl(pauseScreen);
+    // state.setPause();
+    createUI();
 
-    text1 = new BABYLON_GUI.TextBlock();
-    text1.text = 'xp: ';
-    text1.color = 'white';
-    text1.textHorizontalAlignment = BABYLON_GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-    text1.textVerticalAlignment = BABYLON_GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
-    text1.fontSize = 16;
-    text1.paddingBottom = '5px';
-    text1.paddingLeft = '5px';
-    gui.addControl(text1);
-
-    text2 = new BABYLON_GUI.TextBlock();
-    text2.color = 'white';
-    text2.textHorizontalAlignment = BABYLON_GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
-    text2.textVerticalAlignment = BABYLON_GUI.Control.VERTICAL_ALIGNMENT_TOP;
-    text2.fontSize = 16;
-    text2.paddingTop = '5px';
-    text2.paddingRight = '5px';
-    gui.addControl(text2);
-
-    setInterval(systemLoop, 1000 / TICKS);
-    // Register a render loop to repeatedly render the state.scene
+    // setInterval(systemLoop, 1000 / TICKS);
+    state.pointer = new BABYLON.Vector3(0, 0, 0);
     engine.runRenderLoop(function () {
-        const pickResult = scene.pick(scene.pointerX, scene.pointerY);
-        if (pickResult.hit) {
-            state.pointer = pickResult.pickedPoint;
-            state.pointer.y = 0;
-        }
+        systemLoop();
         scene.render();
     });
 }
 
 function systemLoop() {
     if (!state.pause) {
+        const pickResult = scene.pick(scene.pointerX, scene.pointerY);
+        state.pointer = pickResult.pickedPoint;
+        state.pointer.y = 0;
+
         for (const i in systems) {
             systems[i]();
         }
 
         keyHandler();
 
-        text1.text = state.cpts['vitals'][state.heroId].life + ' / ' + state.cpts['vitals'][state.heroId].maxLife;
-        text2.text = engine.getFps().toFixed() + 'fps / ' + scene.meshes.length;
+        UI.text1.text = state.cpts['vitals'][state.heroId].life + ' / ' + state.cpts['vitals'][state.heroId].maxLife;
+        UI.text2.text = engine.getFps().toFixed() + 'fps / ' + scene.meshes.length;
     }
 }
 

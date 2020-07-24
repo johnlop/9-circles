@@ -14,7 +14,7 @@ export class Skill {
     public key: string;
     public type: Type;
     public skillLastUsed: number;
-    public rateOfFire: number;
+    public cooldown: number;
     public damage: number;
     public speed: number;
     public range: number;
@@ -33,7 +33,7 @@ export class Skill {
         this.key = key;
         this.type = type;
         this.skillLastUsed = Date.now();
-        this.rateOfFire = rateOfFire;
+        this.cooldown = 60000 / rateOfFire;
         this.damage = damage;
         this.range = range;
         this.accuracy = accuracy / 10;
@@ -42,7 +42,7 @@ export class Skill {
 
     public use(userId: number, targetPosition: BABYLON.Vector3): void {
         const now = Date.now();
-        if (now - this.skillLastUsed > this.rateOfFire) {
+        if (now - this.skillLastUsed > this.cooldown) {
             if (this.type === Type.LASER) {
                 targetPosition.y = 1;
                 const position = state.cpts['coordinates'][userId].position.clone();

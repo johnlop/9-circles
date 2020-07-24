@@ -1,10 +1,10 @@
-import { pauseScreen } from './main';
+import { UI } from './ui';
 
 export const state = {
     pause: false,
     setPause: () => {
         state.pause = !state.pause;
-        pauseScreen.isVisible = state.pause;
+        UI.pauseScreen.isVisible = state.pause;
     },
     index: 0,
     count: 0,

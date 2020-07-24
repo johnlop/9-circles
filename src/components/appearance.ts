@@ -1,4 +1,5 @@
-import { scene, shadowGenerator, gui, library } from '../main';
+import { scene, shadowGenerator, library } from '../main';
+import { UI } from '../ui';
 
 export enum Type {
     HERO = 1,
@@ -42,7 +43,7 @@ export class Appearance {
             this.label.text = '100';
             this.label.fontSize = 30;
             this.label.color = 'white';
-            gui.addControl(this.label);
+            UI.gui.addControl(this.label);
             this.label.linkWithMesh(this.mesh);
             this.label.linkOffsetY = -60;
         }
