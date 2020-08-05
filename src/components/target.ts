@@ -4,7 +4,7 @@ export class Target {
     public range: number;
     public speed: number;
 
-    public constructor(id, range, speed) {
+    public constructor(id: number, range: number, speed: number) {
         this.id = id;
         this.range = range;
         this.speed = speed;

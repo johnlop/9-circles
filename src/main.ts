@@ -20,7 +20,7 @@ const MAP_SIZE = 12;
 const GRID_SIZE = 40;
 const PATH_LENGTH = 100;
 const WALL_HEIGH = 20;
-export const TICKS = 30;
+export const TICKS = 60;
 
 export let camera, light, shadowGenerator, ground;
 export let scene;
@@ -89,8 +89,10 @@ function initGame() {
 function systemLoop() {
     if (!state.pause) {
         const pickResult = scene.pick(scene.pointerX, scene.pointerY);
-        state.pointer = pickResult.pickedPoint;
-        state.pointer.y = 0;
+        if (pickResult.pickedPoint) {
+            state.pointer = pickResult.pickedPoint;
+            state.pointer.y = 0;
+        }
 
         for (const i in systems) {
             systems[i]();
