@@ -25,6 +25,8 @@ export class Appearance {
             mat.alpha = 0.5;
             mat.backFaceCulling = false;
             this.mesh.material = mat;
+        } else if (type === 'fps') {
+            this.mesh = BABYLON.MeshBuilder.CreateSphere('fps', { diameter: 0.1 });
         } else {
             this.mesh = BABYLON.MeshBuilder.CreateBox('', { size: 5, height: 40 }, scene);
             this.mesh.checkCollisions = true;

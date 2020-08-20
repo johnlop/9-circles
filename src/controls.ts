@@ -9,18 +9,18 @@ export function keyHandler(): void {
     state.cpts['appearance'][state.heroId].mesh.lookAt(state.pointer);
     const direction = state.pointer.subtract(coordinates.position).normalize();
 
-    if (map['ArrowUp'] || map['KeyW']) {
-        appearance.mesh.moveWithCollisions(direction.scale((map['ShiftLeft'] ? 50 : 30) / TICKS));
-    } else if (map['ArrowDown'] || map['KeyS']) {
-        appearance.mesh.moveWithCollisions(direction.scale(-30 / TICKS));
-    }
-    if (map['ArrowRight'] || map['KeyD']) {
-        const dir = new BABYLON.Vector3(direction.z, direction.y, -direction.x);
-        appearance.mesh.moveWithCollisions(dir.scale(20 / TICKS));
-    } else if (map['ArrowLeft'] || map['KeyA']) {
-        const dir = new BABYLON.Vector3(-direction.z, direction.y, direction.x);
-        appearance.mesh.moveWithCollisions(dir.scale(20 / TICKS));
-    }
+    // if (map['ArrowUp'] || map['KeyW']) {
+    //     appearance.mesh.moveWithCollisions(direction.scale((map['ShiftLeft'] ? 50 : 30) / TICKS));
+    // } else if (map['ArrowDown'] || map['KeyS']) {
+    //     appearance.mesh.moveWithCollisions(direction.scale(-30 / TICKS));
+    // }
+    // if (map['ArrowRight'] || map['KeyD']) {
+    //     const dir = new BABYLON.Vector3(direction.z, direction.y, -direction.x);
+    //     appearance.mesh.moveWithCollisions(dir.scale(20 / TICKS));
+    // } else if (map['ArrowLeft'] || map['KeyA']) {
+    //     const dir = new BABYLON.Vector3(-direction.z, direction.y, direction.x);
+    //     appearance.mesh.moveWithCollisions(dir.scale(20 / TICKS));
+    // }
     coordinates.position = appearance.mesh.position;
     light.position.x = appearance.mesh.position.x;
     light.position.z = appearance.mesh.position.z;

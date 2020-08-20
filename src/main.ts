@@ -31,14 +31,25 @@ function createScene() {
     scene.clearColor = new BABYLON.Color4(0, 0, 0, 1);
     scene.collisionsEnabled = true;
 
+    const moon = new BABYLON.DirectionalLight('DirectionalLight', new BABYLON.Vector3(0, -1, 0), scene);
+    moon.intensity = 0.2;
+
+    // camera = new BABYLON.ArcRotateCamera('Camera', 1, 0.8, 80, new BABYLON.Vector3(0, 0, 0), scene);
+
+    camera = new BABYLON.UniversalCamera('UniversalCamera', new BABYLON.Vector3(0, 1, 0), scene);
+    camera.setTarget(BABYLON.Vector3.Zero());
+    camera.minZ = 0.01;
+    camera.attachControl(canvas, true);
+    camera.speed = 1;
+    camera.angularSpeed = 0.05;
+    camera.angle = Math.PI / 2;
+    camera.direction = new BABYLON.Vector3(Math.cos(camera.angle), 0, Math.sin(camera.angle));
+    engine.isPointerLock = true;
+
     light = new BABYLON.PointLight('light', new BABYLON.Vector3(0, 16, 0), scene);
     light.intensity = 1;
     light.range = 50;
-
-    const moon = new BABYLON.DirectionalLight('DirectionalLight', new BABYLON.Vector3(0, -1, 0), scene);
-    moon.intensity = 0.1;
-
-    camera = new BABYLON.ArcRotateCamera('Camera', 1, 0.8, 80, new BABYLON.Vector3(0, 0, 0), scene);
+    light.parent = camera;
 
     shadowGenerator = new BABYLON.ShadowGenerator(512, light);
     shadowGenerator.usePercentageCloserFiltering = true;
@@ -71,7 +82,7 @@ function initGame() {
     state.cpts = { appearance: {}, vitals: {}, coordinates: {}, target: {}, expiration: {} };
 
     state.heroId = createHero(new BABYLON.Vector3(GRID_SIZE / 2, 0, GRID_SIZE / 2));
-    camera.lockedTarget = state.cpts['appearance'][state.heroId].mesh;
+    state.cpts['appearance'][state.heroId].mesh.parent = camera;
 
     createMap(MAP_SIZE, GRID_SIZE, WALL_HEIGH, PATH_LENGTH);
 

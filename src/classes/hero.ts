@@ -8,7 +8,7 @@ import { state } from '../game';
 export const createHero = function (position: BABYLON.Vector3): number {
     const id = createEntity();
     addComponent(new Coordinates(position), id);
-    addComponent(new Appearance(id, position, 'robot', { hasLabel: false, hasShadow: false }), id);
+    addComponent(new Appearance(id, position, 'fps', { hasLabel: false, hasShadow: false }), id);
     addComponent(new Vitals(100), id);
     state.skills.push(new Skill('Space', Type.LASER, 600, 20, 100, 60, 1));
     state.skills.push(new Skill('KeyE', Type.LASER, 60, 100, 200, 90, 1));
